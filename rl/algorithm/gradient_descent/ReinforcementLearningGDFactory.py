@@ -16,51 +16,25 @@
 
 from __future__ import annotations
 
-from typing import Any, Generic, Optional, Type, TypeVar
+from typing import Any, Generic, List, Optional, Type, TypeVar
 
-StateParam = TypeVar("StateParam")
-ActionParam = TypeVar("ActionParam")
-WeightContainer = TypeVar("WeightContainer")
+D = TypeVar("D")
+NUM_TILINGS = TypeVar("NUM_TILINGS")
+WEIGHT_CONT = TypeVar("WEIGHT_CONT")
+STATE_DIM = TypeVar("STATE_DIM")
 ReinforcementLearningGDType = TypeVar("ReinforcementLearningGDType")
 
-try:
-    from ..LearningAlgorithmFactory import LearningAlgorithmFactory
-    from .ReinforcementLearningGD import ReinforcementLearningGD
-    from .ReinforcementLearningGDAbstract import ReinforcementLearningGDAbstract
-except (ImportError, ValueError):
-    try:
-        from ..learning_algorithm_factory import LearningAlgorithmFactory
-        from .reinforcement_learning_gd import ReinforcementLearningGD
-        from .reinforcement_learning_gd_abstract import ReinforcementLearningGDAbstract
-    except (ImportError, ValueError):
-        class LearningAlgorithmFactory(Generic[StateParam, ActionParam]):  # type: ignore[no-redef]
-            def __init__(self) -> None:
-                self._instance: Any = None
+from ..LearningAlgorithmFactory import LearningAlgorithmFactory
+from .ReinforcementLearningGD import ReinforcementLearningGD
+from .ReinforcementLearningGDAbstract import ReinforcementLearningGDAbstract
 
-            def get(self) -> Any:
-                return self._instance
-
-        class ReinforcementLearningGDAbstract:  # type: ignore[no-redef]
-            pass
-
-        class ReinforcementLearningGD(ReinforcementLearningGDAbstract):  # type: ignore[no-redef]
-            pass
-
-try:
-    from ...coding.TileCode import TileCode
-    from ...policy.Policy import Policy
-except (ImportError, ValueError):
-    try:
-        from ...coding.tile_code import TileCode
-        from ...policy.policy import Policy
-    except (ImportError, ValueError):
-        TileCode = Any  # type: ignore[misc,assignment]
-        Policy = Any  # type: ignore[misc,assignment]
+from ...coding.TileCode import TileCode
+from ...policy.Policy import Policy
 
 
 class ReinforcementLearningGDFactory(
-    LearningAlgorithmFactory[StateParam, ActionParam],
-    Generic[StateParam, ActionParam, WeightContainer, ReinforcementLearningGDType],
+    LearningAlgorithmFactory[List[float], List[float]],
+    Generic[D, NUM_TILINGS, WEIGHT_CONT, STATE_DIM, ReinforcementLearningGDType],
 ):
     """Factory method for ReinforcementLearningGDFactory.
 

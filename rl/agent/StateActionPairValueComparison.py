@@ -18,10 +18,7 @@ from __future__ import annotations
 
 from typing import Generic, Tuple, TypeVar
 
-try:
-    from .state_action import StateAction
-except ImportError:
-    from rl.agent.state_action import StateAction
+from .StateAction import StateAction
 
 S = TypeVar("S")
 A = TypeVar("A")

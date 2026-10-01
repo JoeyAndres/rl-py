@@ -21,35 +21,11 @@ from typing import Any, Dict, Generic, Optional, Set, TypeVar, final
 S = TypeVar("S")
 A = TypeVar("A")
 
-try:
-    from .EligibilityTraces import EligibilityTraces
-    from .ReinforcementLearning import ReinforcementLearning
-    from .Sarsa import Sarsa
-    from ..agent.StateAction import StateAction
-    from ..policy.Policy import Policy
-except (ImportError, ValueError):
-    try:
-        from EligibilityTraces import EligibilityTraces  # type: ignore
-        from ReinforcementLearning import ReinforcementLearning  # type: ignore
-        from Sarsa import Sarsa  # type: ignore
-        from StateAction import StateAction  # type: ignore
-        from Policy import Policy  # type: ignore
-    except (ImportError, ValueError):
-        try:
-            from .eligibility_traces import EligibilityTraces  # type: ignore
-            from .reinforcement_learning import ReinforcementLearning  # type: ignore
-            from .sarsa import Sarsa  # type: ignore
-            from ..agent.state_action import StateAction  # type: ignore
-            from ..policy.policy import Policy  # type: ignore
-        except (ImportError, ValueError):
-            try:
-                from eligibility_traces import EligibilityTraces  # type: ignore
-                from reinforcement_learning import ReinforcementLearning  # type: ignore
-                from sarsa import Sarsa  # type: ignore
-                from state_action import StateAction  # type: ignore
-                from policy import Policy  # type: ignore
-            except (ImportError, ValueError):
-                pass
+from .EligibilityTraces import EligibilityTraces
+from .ReinforcementLearning import ReinforcementLearning
+from .Sarsa import Sarsa
+from ..agent.StateAction import StateAction
+from ..policy.Policy import Policy
 
 
 @final

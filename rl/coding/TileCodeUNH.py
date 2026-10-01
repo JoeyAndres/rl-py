@@ -27,63 +27,10 @@ from typing import (
     Union,
 )
 
-try:
-    from ..hash.HashUNH import UNH
-    from .TileCode import TileCode, DEFAULT_TILE_CONT
-    from .DimensionInfo import DimensionInfo
-    from ..declares import FEATURE_VECTOR, FLOAT, INT, UINT, floatArray
-except (ImportError, ValueError):
-    try:
-        from rl.hash.HashUNH import UNH
-        from rl.coding.TileCode import TileCode, DEFAULT_TILE_CONT
-        from rl.coding.DimensionInfo import DimensionInfo
-        from rl.declares import FEATURE_VECTOR, FLOAT, INT, UINT, floatArray
-    except (ImportError, ValueError):
-        FLOAT = float
-        UINT = int
-        INT = int
-        BYTE = int
-        FEATURE_VECTOR = List[int]
-        floatArray = Sequence[float]
-        DEFAULT_TILE_CONT = List[float]
-
-        class DimensionInfo:
-            def __init__(
-                self,
-                lowerRange: float,
-                higherRange: float,
-                gridCount: int,
-                generalizationScale: float = 1.0,
-            ) -> None:
-                self._range = (lowerRange, higherRange)
-                self._gridCountIdeal = gridCount
-                self._generalizationScale = generalizationScale
-
-            def GetRangeDifference(self) -> float:
-                return abs(self._range[0] - self._range[1])
-
-        class UNH:
-            def hash(self, byteArray: Any, length: int) -> int:
-                return 0
-
-        _T_D = TypeVar("_T_D")
-        _T_NUM_TILINGS = TypeVar("_T_NUM_TILINGS")
-        _T_WEIGHT_CONT = TypeVar("_T_WEIGHT_CONT")
-
-        class TileCode(Generic[_T_D, _T_NUM_TILINGS, _T_WEIGHT_CONT]):
-            def __init__(
-                self,
-                dimensionalInfos: Sequence[Any],
-                sizeHint: Optional[int] = None,
-            ) -> None:
-                self._dimensionalInfos = dimensionalInfos
-                self._sizeCache = sizeHint if sizeHint is not None else 0
-
-            def getDimension(self) -> int:
-                return len(self._dimensionalInfos)
-
-            def getNumTilings(self) -> int:
-                return getattr(self, "_numTilings", 0)
+from ..hash.HashUNH import UNH
+from .TileCode import TileCode, DEFAULT_TILE_CONT
+from .DimensionInfo import DimensionInfo
+from ..declares import FEATURE_VECTOR, FLOAT, INT, UINT, floatArray
 
 
 D = TypeVar("D")

@@ -18,27 +18,14 @@ from __future__ import annotations
 
 from typing import Any, Generic, List, TypeVar
 
-try:
-    from .ReinforcementLearningGDFactory import ReinforcementLearningGDFactory
-    from .QLearningETGD import QLearningETGD
-except (ImportError, ValueError):
-    from ReinforcementLearningGDFactory import ReinforcementLearningGDFactory
-    from QLearningETGD import QLearningETGD
+from .ReinforcementLearningGDFactory import ReinforcementLearningGDFactory
+from .QLearningETGD import QLearningETGD
 
-try:
-    from ...coding.TileCode import DEFAULT_TILE_CONT
-except (ImportError, ValueError):
-    try:
-        from coding.TileCode import DEFAULT_TILE_CONT
-    except (ImportError, ValueError):
-        DEFAULT_TILE_CONT = List[float]
+from ...coding.TileCode import DEFAULT_TILE_CONT
 
 D = TypeVar("D")
 NUM_TILINGS = TypeVar("NUM_TILINGS")
-try:
-    WEIGHT_CONT = TypeVar("WEIGHT_CONT", default=DEFAULT_TILE_CONT)
-except TypeError:
-    WEIGHT_CONT = TypeVar("WEIGHT_CONT")
+WEIGHT_CONT = TypeVar("WEIGHT_CONT")
 STATE_DIM = TypeVar("STATE_DIM")
 
 

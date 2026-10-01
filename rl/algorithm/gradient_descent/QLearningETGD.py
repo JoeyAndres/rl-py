@@ -18,31 +18,7 @@ from __future__ import annotations
 
 from typing import Any, Generic, TypeVar
 
-try:
-    from .ReinforcementLearningGDET import ReinforcementLearningGDET
-except ImportError:
-    try:
-        from ReinforcementLearningGDET import ReinforcementLearningGDET
-    except ImportError:
-        D_ = TypeVar("D_")
-        NUM_TILINGS_ = TypeVar("NUM_TILINGS_")
-        WEIGHT_CONT_ = TypeVar("WEIGHT_CONT_")
-        STATE_DIM_ = TypeVar("STATE_DIM_")
-
-        class ReinforcementLearningGDET(Generic[D_, NUM_TILINGS_, WEIGHT_CONT_, STATE_DIM_]):  # type: ignore[no-redef]
-            def __init__(
-                self,
-                tile_code: Any,
-                step_size: float,
-                discount_rate: float,
-                lambda_: float,
-                policy: Any,
-            ) -> None:
-                self.tile_code = tile_code
-                self.step_size = step_size
-                self.discount_rate = discount_rate
-                self.lambda_ = lambda_
-                self.policy = policy
+from .ReinforcementLearningGDET import ReinforcementLearningGDET
 
 
 D = TypeVar("D")

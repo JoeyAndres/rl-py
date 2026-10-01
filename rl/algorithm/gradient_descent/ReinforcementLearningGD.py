@@ -20,52 +20,10 @@ from __future__ import annotations
 
 from typing import Any, Generic, List, TypeVar
 
-try:
-    from .ReinforcementLearningGDAbstract import ReinforcementLearningGDAbstract
-    from .GradientDescentTileCode import GradientDescentTileCode
-    from ...coding.TileCode import DEFAULT_TILE_CONT, TileCode
-    from ...policy.Policy import Policy
-except (ImportError, ValueError):
-    try:
-        from ReinforcementLearningGDAbstract import ReinforcementLearningGDAbstract
-        from GradientDescentTileCode import GradientDescentTileCode
-        from TileCode import DEFAULT_TILE_CONT, TileCode
-        from Policy import Policy
-    except (ImportError, ValueError):
-        DEFAULT_TILE_CONT = List[float]
-
-        _D = TypeVar("_D")
-        _STATE_DIM = TypeVar("_STATE_DIM")
-        _NUM_TILINGS = TypeVar("_NUM_TILINGS")
-        _WEIGHT_CONT = TypeVar("_WEIGHT_CONT")
-
-        class ReinforcementLearningGDAbstract(Generic[_D, _STATE_DIM]):
-            def __init__(
-                self,
-                tile_code: Any,
-                step_size: float,
-                discount_rate: float,
-                lambda_: float,
-                policy: Any,
-            ) -> None:
-                self._gradientDescent: Any = None
-                self._gradient_descent: Any = None
-
-        class GradientDescentTileCode(Generic[_D, _NUM_TILINGS, _WEIGHT_CONT, _STATE_DIM]):
-            def __init__(
-                self,
-                tile_code: Any,
-                step_size: float,
-                discount_rate: float,
-                lambda_: float,
-            ) -> None:
-                pass
-
-        class TileCode(Generic[_D, _NUM_TILINGS, _WEIGHT_CONT]):
-            pass
-
-        class Policy:
-            pass
+from .ReinforcementLearningGDAbstract import ReinforcementLearningGDAbstract
+from .GradientDescentTileCode import GradientDescentTileCode
+from ...coding.TileCode import DEFAULT_TILE_CONT, TileCode
+from ...policy.Policy import Policy
 
 FLOAT = float
 

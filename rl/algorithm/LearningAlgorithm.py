@@ -26,85 +26,14 @@ A = TypeVar("A")
 
 FLOAT = float
 
-try:
-    from rl.declares import DEFAULT_GREEDINESS_LEARNING_POLICY
-except ImportError:
-    try:
-        from ..declares import DEFAULT_GREEDINESS_LEARNING_POLICY
-    except (ImportError, ValueError):
-        DEFAULT_GREEDINESS_LEARNING_POLICY: float = 1.0
+from ..declares import DEFAULT_GREEDINESS_LEARNING_POLICY
 
-try:
-    from rl.agent.StateAction import StateAction
-except ImportError:
-    try:
-        from ..agent.StateAction import StateAction
-    except (ImportError, ValueError):
-        class StateAction(Generic[S, A]):  # type: ignore
-            def __init__(self, state: Optional[S] = None, action: Optional[A] = None) -> None:
-                self.state = state
-                self.action = action
+from ..agent.StateAction import StateAction
 
-            def getState(self) -> Optional[S]:
-                return self.state
+from ..policy.Policy import Policy, spPolicy
 
-            def getAction(self) -> Optional[A]:
-                return self.action
-
-try:
-    from rl.policy.Policy import Policy, spPolicy
-except ImportError:
-    try:
-        from ..policy.Policy import Policy, spPolicy
-    except (ImportError, ValueError):
-        class Policy(Generic[S, A], ABC):  # type: ignore
-            @abstractmethod
-            def getAction(
-                self,
-                actionValues: Dict[A, float],
-                actionSet: Set[A],
-                maxAction: Optional[A] = None,
-            ) -> Optional[A]:
-                raise NotImplementedError
-
-            def get_action(
-                self,
-                action_values: Dict[A, float],
-                action_set: Set[A],
-                max_action: Optional[A] = None,
-            ) -> Optional[A]:
-                return self.getAction(action_values, action_set, max_action)
-
-        spPolicy = Policy  # type: ignore
-
-try:
-    from rl.policy.EpsilonGreedy import EpsilonGreedy, spEpsilonGreedy
-    from rl.policy.EpsilonGreedyFactory import EpsilonGreedyFactory
-except ImportError:
-    try:
-        from ..policy.EpsilonGreedy import EpsilonGreedy, spEpsilonGreedy
-        from ..policy.EpsilonGreedyFactory import EpsilonGreedyFactory
-    except (ImportError, ValueError):
-        class EpsilonGreedy(Policy[S, A]):  # type: ignore
-            def __init__(self, greediness: float) -> None:
-                self.greediness = greediness
-
-            def getAction(
-                self,
-                actionValues: Dict[A, float],
-                actionSet: Set[A],
-                maxAction: Optional[A] = None,
-            ) -> Optional[A]:
-                return next(iter(actionSet)) if actionSet else None
-
-        spEpsilonGreedy = EpsilonGreedy  # type: ignore
-
-        class EpsilonGreedyFactory(Generic[S, A]):  # type: ignore
-            def __init__(self, greediness: float) -> None:
-                self._instance: Policy[S, A] = EpsilonGreedy(greediness)
-
-            def get(self) -> Policy[S, A]:
-                return self._instance
+from ..policy.EpsilonGreedy import EpsilonGreedy, spEpsilonGreedy
+from ..policy.EpsilonGreedyFactory import EpsilonGreedyFactory
 
 
 def _get_default_learning_policy() -> Optional[Any]:

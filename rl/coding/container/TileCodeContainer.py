@@ -37,105 +37,14 @@ class CRUDInterface(ABC):
 
 
 # Database interface and fallback stubs matching rl::db
-try:
-    from rl import db  # type: ignore
-except ImportError:
-    class _DBStub:
-        session: Any = None
-        RLKeySpace: str = (
-            "CREATE KEYSPACE IF NOT EXISTS rl\n"
-            "  WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 3};"
-        )
-        TileCodeContainer: str = (
-            "CREATE TABLE IF NOT EXISTS rl.tilecodecontainer (\n"
-            "  id text PRIMARY KEY,\n"
-            "  size bigint,\n"
-            "  initialValue double\n"
-            ");"
-        )
-        TileCodeContainerSegment: str = (
-            "CREATE TABLE IF NOT EXISTS rl.tilecodecontainersegment (\n"
-            "  tileCodeContainerId text,\n"
-            "  size bigint,\n"
-            "  segmentIndex bigint,\n"
-            "  PRIMARY KEY (tileCodeContainerId, segmentIndex)"
-            ") WITH caching = { 'keys' : 'NONE', 'rows_per_partition' : '120' };"
-        )
-        InsertTileCodeContainer: str = (
-            "INSERT INTO rl.tilecodecontainer (id, size, initialValue) VALUES (?, ?, ?);"
-        )
-
-        @staticmethod
-        def initialize() -> None:
-            pass
-
-        @staticmethod
-        def terminate() -> None:
-            pass
-
-        @staticmethod
-        def executeStatement(stmt: str) -> None:
-            if _DBStub.session is not None:
-                _DBStub.session.execute(stmt)
-
-    db = _DBStub()
+from ... import db
 
 
 # Segment and Cell types matching rl::coding
-try:
-    from rl.coding.container.TileCodeContainerSegment import TileCodeContainerSegment  # type: ignore
-except ImportError:
-    class TileCodeContainerSegment(CRUDInterface):  # type: ignore
-        def __init__(
-            self,
-            tile_code_container_id: str,
-            size_or_index: int,
-            index: Optional[int] = None,
-        ) -> None:
-            self.tile_code_container_id = tile_code_container_id
-            if index is None:
-                self.size = SEGMENT_SIZE
-                self.index = size_or_index
-            else:
-                self.size = size_or_index
-                self.index = index
-
-        def create(self) -> None:
-            pass
-
-        def read(self) -> None:
-            pass
-
-        def update(self) -> None:
-            pass
-
-        def delete2(self) -> None:
-            pass
-
-        def at(self, i: int) -> Any:
-            return TileCodeContainerCell()
-
-        def __getitem__(self, i: int) -> Any:
-            return self.at(i)
+from .TileCodeContainerSegment import TileCodeContainerSegment
 
 
-try:
-    from rl.coding.container.TileCodeContainerCell import TileCodeContainerCell  # type: ignore
-except ImportError:
-    class TileCodeContainerCell:  # type: ignore
-        def __init__(self, *args: Any, **kwargs: Any) -> None:
-            self._value: float = 0.0
-
-        def set(self, value: float) -> None:
-            self._value = value
-
-        def __eq__(self, other: Any) -> bool:
-            if isinstance(other, (int, float)):
-                return self._value == float(other)
-            return super().__eq__(other)
-
-        def __float__(self) -> float:
-            return float(self._value)
+from .TileCodeContainerCell import TileCodeContainerCell
 
 
 T_ID = TypeVar("T_ID")

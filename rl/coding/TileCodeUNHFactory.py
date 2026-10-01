@@ -16,12 +16,8 @@
 
 from typing import Generic, List, TypeVar
 
-try:
-    from .TileCodeHashedFactory import TileCodeHashedFactory
-    from .TileCodeUNH import TileCodeUNH
-except ImportError:
-    from TileCodeHashedFactory import TileCodeHashedFactory
-    from TileCodeUNH import TileCodeUNH
+from .TileCodeHashedFactory import TileCodeHashedFactory
+from .TileCodeUNH import TileCodeUNH
 
 DEFAULT_TILE_CONT = List[float]
 

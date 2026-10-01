@@ -18,26 +18,10 @@ from __future__ import annotations
 
 from typing import Any, Generic, List, Optional, Type, TypeVar
 
-try:
-    from .ReinforcementLearningGDFactory import ReinforcementLearningGDFactory
-    from .QLearningGD import QLearningGD
-except (ImportError, ValueError):
-    try:
-        from rl.algorithm.gradient_descent.ReinforcementLearningGDFactory import (
-            ReinforcementLearningGDFactory,
-        )
-        from rl.algorithm.gradient_descent.QLearningGD import QLearningGD
-    except (ImportError, ValueError):
-        from ReinforcementLearningGDFactory import ReinforcementLearningGDFactory
-        from QLearningGD import QLearningGD
+from .ReinforcementLearningGDFactory import ReinforcementLearningGDFactory
+from .QLearningGD import QLearningGD
 
-try:
-    from ...coding.TileCode import DEFAULT_TILE_CONT
-except (ImportError, ValueError):
-    try:
-        from rl.coding.TileCode import DEFAULT_TILE_CONT
-    except (ImportError, ValueError):
-        DEFAULT_TILE_CONT = List[float]
+from ...coding.TileCode import DEFAULT_TILE_CONT
 
 D = TypeVar("D")
 NUM_TILINGS = TypeVar("NUM_TILINGS")

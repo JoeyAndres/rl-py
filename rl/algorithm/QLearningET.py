@@ -18,32 +18,11 @@ from __future__ import annotations
 
 from typing import Any, Generic, Optional, Set, TypeVar, final
 
-try:
-    from ..agent.StateAction import StateAction
-    from ..policy.Policy import Policy
-    from .EligibilityTraces import EligibilityTraces
-    from .QLearning import QLearning
-    from .ReinforcementLearning import ReinforcementLearning
-except (ImportError, ValueError):
-    try:
-        from ..agent.state_action import StateAction
-        from ..policy.policy import Policy
-        from .eligibility_traces import EligibilityTraces
-        from .q_learning import QLearning
-        from .reinforcement_learning import ReinforcementLearning
-    except (ImportError, ValueError):
-        try:
-            from StateAction import StateAction  # type: ignore
-            from Policy import Policy  # type: ignore
-            from EligibilityTraces import EligibilityTraces  # type: ignore
-            from QLearning import QLearning  # type: ignore
-            from ReinforcementLearning import ReinforcementLearning  # type: ignore
-        except (ImportError, ValueError):
-            from rl.agent.StateAction import StateAction  # type: ignore
-            from rl.policy.Policy import Policy  # type: ignore
-            from rl.algorithm.EligibilityTraces import EligibilityTraces  # type: ignore
-            from rl.algorithm.QLearning import QLearning  # type: ignore
-            from rl.algorithm.ReinforcementLearning import ReinforcementLearning  # type: ignore
+from ..agent.StateAction import StateAction
+from ..policy.Policy import Policy
+from .EligibilityTraces import EligibilityTraces
+from .QLearning import QLearning
+from .ReinforcementLearning import ReinforcementLearning
 
 S = TypeVar("S")
 A = TypeVar("A")

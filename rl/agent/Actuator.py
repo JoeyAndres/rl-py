@@ -18,16 +18,7 @@ from __future__ import annotations
 
 from typing import Generic, Optional, Set, TypeVar
 
-try:
-    from .ActionContainer import ActionContainer
-except ImportError:
-    try:
-        from ActionContainer import ActionContainer
-    except ImportError:
-        try:
-            from .action_container import ActionContainer
-        except ImportError:
-            from action_container import ActionContainer
+from .ActionContainer import ActionContainer
 
 A = TypeVar("A")
 

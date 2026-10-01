@@ -29,15 +29,11 @@ from .ReinforcementLearning import ReinforcementLearning
 S = TypeVar("S")
 A = TypeVar("A")
 
-if sys.version_info >= (3, 13):
-    SAP_CONTAINER = TypeVar("SAP_CONTAINER", default=StateActionPairContainerSimple)
-else:
-    SAP_CONTAINER = TypeVar("SAP_CONTAINER")
 
 
 class ReinforcementLearningFactory(
-    FactoryAbstract[ReinforcementLearning[S, A, SAP_CONTAINER]],
-    Generic[S, A, SAP_CONTAINER],
+    FactoryAbstract[ReinforcementLearning[S, A]],
+    Generic[S, A],
 ):
     """
     Factory method for ReinforcementLearning. Can't really use this.

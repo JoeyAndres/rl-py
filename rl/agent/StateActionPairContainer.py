@@ -31,60 +31,8 @@ from typing import (
     TypeVar,
 )
 
-try:
-    from rl.agent.StateAction import StateAction
-    from rl.agent.StateActionNotExistException import StateActionNotExistException
-except ImportError:
-    try:
-        from .StateAction import StateAction
-        from .StateActionNotExistException import StateActionNotExistException
-    except ImportError:
-        try:
-            from StateAction import StateAction
-            from StateActionNotExistException import StateActionNotExistException
-        except ImportError:
-            class StateActionNotExistException(Exception):
-                """Handling situations when StateAction being queried does not exist."""
-
-                def __init__(self, extra_message: str = "") -> None:
-                    super().__init__(extra_message)
-                    self._extra_message: str = extra_message
-
-                def what(self) -> str:
-                    return self._extra_message
-
-                def __str__(self) -> str:
-                    return self._extra_message
-
-            class StateAction(Generic[TypeVar("S"), TypeVar("A")]):
-                """Encapsulates state action pair."""
-
-                def __init__(self, state: Any = None, action: Any = None) -> None:
-                    self._state = state
-                    self._action = action
-
-                def getState(self) -> Any:
-                    return self._state
-
-                def getAction(self) -> Any:
-                    return self._action
-
-                def setState(self, state: Any) -> None:
-                    self._state = state
-
-                def setAction(self, action: Any) -> None:
-                    self._action = action
-
-                def __eq__(self, other: Any) -> bool:
-                    if not isinstance(other, StateAction):
-                        return False
-                    return self._state == other._state and self._action == other._action
-
-                def __hash__(self) -> int:
-                    return hash((self._state, self._action))
-
-                def __repr__(self) -> str:
-                    return f"StateAction({self._state!r}, {self._action!r})"
+from .StateAction import StateAction
+from .StateActionNotExistException import StateActionNotExistException
 
 S = TypeVar("S")
 A = TypeVar("A")

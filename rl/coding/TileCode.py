@@ -25,119 +25,15 @@ WEIGHT_CONT = TypeVar("WEIGHT_CONT", bound=MutableSequence[float])
 
 
 # Base interface corresponding to rl::utility::IndexAccessorInterface
-try:
-    from rl.utility.IndexAccessorInterface import IndexAccessorInterface
-except ImportError:
-    try:
-        from IndexAccessorInterface import IndexAccessorInterface
-    except ImportError:
-
-        class IndexAccessorInterface(ABC, Generic[CONT]):
-            @abstractmethod
-            def at(self, i: int) -> Any:
-                pass
-
-            def __getitem__(self, i: int) -> Any:
-                return self.at(i)
-
-            def __setitem__(self, i: int, value: Any) -> None:
-                pass
+from ..utility.IndexAccessorInterface import IndexAccessorInterface
 
 
 # Base class corresponding to rl::coding::CourseCode
-try:
-    from rl.coding.CourseCode import CourseCode
-except ImportError:
-    try:
-        from CourseCode import CourseCode
-    except ImportError:
-
-        class CourseCode(ABC, Generic[D]):
-            def __init__(self, dimension: int = 0) -> None:
-                self._dimension = dimension
-
-            def getDimension(self) -> int:
-                return self._dimension
-
-            def get_dimension(self) -> int:
-                return self.getDimension()
-
-            @abstractmethod
-            def getValueFromParameters(self, parameters: Sequence[float]) -> float:
-                pass
-
-            @abstractmethod
-            def getSize(self) -> int:
-                pass
+from .CourseCode import CourseCode
 
 
 # Class corresponding to rl::coding::DimensionInfo
-try:
-    from rl.coding.DimensionInfo import DimensionInfo
-except ImportError:
-    try:
-        from DimensionInfo import DimensionInfo
-    except ImportError:
-
-        class DimensionInfo:
-            def __init__(
-                self,
-                lowerRange: float = 0.0,
-                higherRange: float = 0.0,
-                gridCount: int = 0,
-                generalizationScale: float = 1.0,
-            ) -> None:
-                self._lowerRange = lowerRange
-                self._higherRange = higherRange
-                self._gridCountIdeal = gridCount
-                self._generalizationScale = generalizationScale
-
-            def GetOffsets(self) -> float:
-                if self._gridCountIdeal == 0:
-                    return 0.0
-                return (self._higherRange - self._lowerRange) / self._gridCountIdeal
-
-            def GetGridCountReal(self) -> int:
-                return self._gridCountIdeal + 1
-
-            def SetGridCountIdeal(self, gridCountIdeal: int) -> None:
-                self._gridCountIdeal = gridCountIdeal
-
-            def GetGridCountIdeal(self) -> int:
-                return self._gridCountIdeal
-
-            def GetRangeDifference(self) -> float:
-                return abs(self._higherRange - self._lowerRange)
-
-            def setUpperBound(self, upperBound: float) -> None:
-                self._higherRange = upperBound
-
-            def setLowerBound(self, lowerBound: float) -> None:
-                self._lowerRange = lowerBound
-
-            def getUpperBound(self) -> float:
-                return self._higherRange
-
-            def getLowerBound(self) -> float:
-                return self._lowerRange
-
-            def getGeneralizationScale(self) -> float:
-                return self._generalizationScale
-
-            def setGeneralizationScale(self, generalization: float) -> None:
-                self._generalizationScale = generalization
-
-            get_offsets = GetOffsets
-            get_grid_count_real = GetGridCountReal
-            set_grid_count_ideal = SetGridCountIdeal
-            get_grid_count_ideal = GetGridCountIdeal
-            get_range_difference = GetRangeDifference
-            set_upper_bound = setUpperBound
-            set_lower_bound = setLowerBound
-            get_upper_bound = getUpperBound
-            get_lower_bound = getLowerBound
-            get_generalization_scale = getGeneralizationScale
-            set_generalization_scale = setGeneralizationScale
+from .DimensionInfo import DimensionInfo
 
 
 class TileCode(

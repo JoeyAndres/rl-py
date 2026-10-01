@@ -34,24 +34,7 @@ BYTE = int
 FEATURE_VECTOR = List[int]
 DEFAULT_TILE_CONT = List[float]
 
-try:
-    from ..hash.HashInterface import HashInterface
-except (ImportError, ValueError):
-    try:
-        from rl.hash.HashInterface import HashInterface
-    except (ImportError, ValueError):
-        try:
-            from HashInterface import HashInterface
-        except (ImportError, ValueError):
-            RET = TypeVar("RET")
-
-            class HashInterface(Generic[RET]):  # type: ignore
-                def hash(
-                    self,
-                    byte_array: Union[bytes, bytearray, Sequence[int]],
-                    length: Optional[int] = None,
-                ) -> RET:
-                    raise NotImplementedError
+from ..hash.HashInterface import HashInterface
 
 
 def _super_fast_hash(data: bytes, length: Optional[int] = None) -> int:
@@ -97,97 +80,13 @@ def _super_fast_hash(data: bytes, length: Optional[int] = None) -> int:
     return hash_val
 
 
-try:
-    from ..hash.HashSuperFastHash import SuperFastHash
-except (ImportError, ValueError):
-    try:
-        from rl.hash.HashSuperFastHash import SuperFastHash
-    except (ImportError, ValueError):
-        try:
-            from HashSuperFastHash import SuperFastHash
-        except (ImportError, ValueError):
-
-            class SuperFastHash(HashInterface[int]):  # type: ignore
-                def hash(
-                    self,
-                    byte_array: Union[bytes, bytearray, Sequence[int]],
-                    length: Optional[int] = None,
-                ) -> int:
-                    if isinstance(byte_array, (bytes, bytearray)):
-                        b = bytes(byte_array)
-                    else:
-                        b = bytes(byte_array)
-                    l = len(b) if length is None else length
-                    return _super_fast_hash(b, l)
+from ..hash.HashSuperFastHash import SuperFastHash
 
 
-try:
-    from .DimensionInfo import DimensionInfo
-except (ImportError, ValueError):
-    try:
-        from rl.coding.DimensionInfo import DimensionInfo
-    except (ImportError, ValueError):
-        try:
-            from DimensionInfo import DimensionInfo
-        except (ImportError, ValueError):
-            T = TypeVar("T")
-
-            class DimensionInfo(Generic[T]):  # type: ignore
-                def __init__(self, min_val: T, max_val: T, partitions: int, offsets: int = 0) -> None:
-                    self._min = min_val
-                    self._max = max_val
-                    self._partitions = partitions
-                    self._offsets = offsets
-
-                def getMin(self) -> T:
-                    return self._min
-
-                def getMax(self) -> T:
-                    return self._max
-
-                def getOffsets(self) -> int:
-                    return self._offsets
-
-                def getGeneralizationScale(self) -> float:
-                    return (float(self._max) - float(self._min)) / float(self._partitions)
+from .DimensionInfo import DimensionInfo
 
 
-try:
-    from .TileCode import TileCode, DEFAULT_TILE_CONT
-except (ImportError, ValueError):
-    try:
-        from rl.coding.TileCode import TileCode, DEFAULT_TILE_CONT
-    except (ImportError, ValueError):
-        try:
-            from TileCode import TileCode, DEFAULT_TILE_CONT
-        except (ImportError, ValueError):
-            TC_D = TypeVar("TC_D")
-            TC_NUM = TypeVar("TC_NUM")
-            TC_WEIGHT = TypeVar("TC_WEIGHT")
-
-            class TileCode(Generic[TC_D, TC_NUM, TC_WEIGHT]):  # type: ignore
-                def __init__(
-                    self,
-                    dimensional_infos: Sequence[DimensionInfo[float]],
-                    size_hint: Optional[int] = None,
-                    *args: Any,
-                    **kwargs: Any,
-                ) -> None:
-                    self._dimensionalInfos = dimensional_infos
-                    self._sizeCache = size_hint if size_hint is not None else 0
-                    self.num_tilings = kwargs.get("num_tilings", kwargs.get("numTilings", 0))
-
-                def getDimension(self) -> int:
-                    return len(self._dimensionalInfos) if hasattr(self, "_dimensionalInfos") else 0
-
-                def getNumTilings(self) -> int:
-                    return getattr(self, "num_tilings", getattr(self, "NUM_TILINGS", 0))
-
-                def getSize(self) -> int:
-                    return getattr(self, "_sizeCache", 0)
-
-                def paramToGridValue(self, param: float, tiling_index: int, dimension_index: int) -> int:
-                    raise NotImplementedError
+from .TileCode import TileCode, DEFAULT_TILE_CONT
 
 
 D = TypeVar("D")

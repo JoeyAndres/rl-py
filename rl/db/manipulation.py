@@ -157,10 +157,12 @@ class rl:
                 "id, size, initialValue) VALUES (?, ?, ?);"
             )
 
-            InsertTileCodeContainerSegment: Final[str] = (
-                rl.db.InsertTileCodeContainerSegment
-            )
+            InsertTileCodeContainerSegment: Final[str] = ""
 
+
+rl.db.Manipulation.InsertTileCodeContainerSegment = (
+    rl.db.InsertTileCodeContainerSegment
+)
 
 # Direct module-level aliases
 InsertTileCodeContainer: Final[str] = rl.db.InsertTileCodeContainer

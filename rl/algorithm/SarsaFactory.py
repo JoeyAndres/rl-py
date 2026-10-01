@@ -19,18 +19,17 @@ from __future__ import annotations
 
 from typing import Generic, Optional, TypeVar
 
-from rl.agent.StateActionPairContainer import StateActionPairContainerSimple
-from rl.algorithm.ReinforcementLearning import ReinforcementLearning
-from rl.algorithm.ReinforcementLearningFactory import ReinforcementLearningFactory
-from rl.algorithm.Sarsa import Sarsa
-from rl.policy.Policy import Policy
+from ..agent.StateActionPairContainer import StateActionPairContainerSimple
+from .ReinforcementLearning import ReinforcementLearning
+from .ReinforcementLearningFactory import ReinforcementLearningFactory
+from .Sarsa import Sarsa
+from ..policy.Policy import Policy
 
 S = TypeVar("S")
 A = TypeVar("A")
-SAP_CONTAINER = TypeVar("SAP_CONTAINER")
 
 
-class SarsaFactory(ReinforcementLearningFactory[S, A, SAP_CONTAINER], Generic[S, A, SAP_CONTAINER]):
+class SarsaFactory(ReinforcementLearningFactory[S, A], Generic[S, A]):
     """Factory method for Sarsa.
 
     :tparam S: State data type.
@@ -44,6 +43,6 @@ class SarsaFactory(ReinforcementLearningFactory[S, A, SAP_CONTAINER], Generic[S,
         policy: Policy[S, A],
     ) -> None:
         super().__init__()
-        self._instance: Optional[ReinforcementLearning[S, A, SAP_CONTAINER]] = Sarsa(
+        self._instance: Optional[ReinforcementLearning[S, A]] = Sarsa(
             step_size, discount_rate, policy
         )

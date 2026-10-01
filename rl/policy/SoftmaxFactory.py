@@ -16,12 +16,8 @@
 
 from typing import Generic, TypeVar
 
-try:
-    from .PolicyFactory import PolicyFactory
-    from .Softmax import Softmax
-except ImportError:
-    from PolicyFactory import PolicyFactory
-    from Softmax import Softmax
+from .PolicyFactory import PolicyFactory
+from .Softmax import Softmax
 
 S = TypeVar("S")
 A = TypeVar("A")

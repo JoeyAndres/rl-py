@@ -21,47 +21,10 @@ from typing import Any, Dict, Generic, Optional, Set, TypeVar, final
 S = TypeVar("S")
 A = TypeVar("A")
 
-try:
-    from .DynaQ import DynaQ
-    from .EligibilityTraces import EligibilityTraces
-    from ..agent.StateAction import StateAction
-    from ..policy.Policy import Policy
-except (ImportError, ValueError):
-    try:
-        from DynaQ import DynaQ  # type: ignore
-        from EligibilityTraces import EligibilityTraces  # type: ignore
-        from StateAction import StateAction  # type: ignore
-        from Policy import Policy  # type: ignore
-    except (ImportError, ValueError):
-        try:
-            from .dyna_q import DynaQ  # type: ignore
-            from .eligibility_traces import EligibilityTraces  # type: ignore
-            from ..agent.state_action import StateAction  # type: ignore
-            from ..policy.policy import Policy  # type: ignore
-        except (ImportError, ValueError):
-            try:
-                from dyna_q import DynaQ  # type: ignore
-                from eligibility_traces import EligibilityTraces  # type: ignore
-                from state_action import StateAction  # type: ignore
-                from policy import Policy  # type: ignore
-            except (ImportError, ValueError):
-                class DynaQ(Generic[S, A]):  # type: ignore
-                    def __init__(self, *args: Any, **kwargs: Any) -> None:
-                        pass
-
-                class EligibilityTraces(Generic[S, A]):  # type: ignore
-                    def __init__(self, *args: Any, **kwargs: Any) -> None:
-                        self._lambda: float = 0.0
-                        self._eligibilityTraces: Dict[Any, float] = {}
-                        self._eligibility_traces = self._eligibilityTraces
-
-                class StateAction(Generic[S, A]):  # type: ignore
-                    def __init__(self, state: Any = None, action: Any = None) -> None:
-                        self.state = state
-                        self.action = action
-
-                class Policy(Generic[S, A]):  # type: ignore
-                    pass
+from .DynaQ import DynaQ
+from .EligibilityTraces import EligibilityTraces
+from ..agent.StateAction import StateAction
+from ..policy.Policy import Policy
 
 
 @final

@@ -20,32 +20,16 @@ from __future__ import annotations
 
 from typing import Any, Generic, Optional, Set, TypeVar
 
-try:
-    from rl.agent.state_action import StateAction
-    from rl.policy.policy import Policy
-    from rl.algorithm.reinforcement_learning import ReinforcementLearning
-    from rl.agent.state_action_pair_container import StateActionPairContainerSimple
-except ImportError:
-    try:
-        from ..agent.state_action import StateAction
-        from ..policy.policy import Policy
-        from .reinforcement_learning import ReinforcementLearning
-        from ..agent.state_action_pair_container import StateActionPairContainerSimple
-    except ImportError:
-        from agent.StateAction import StateAction  # type: ignore
-        from policy.Policy import Policy  # type: ignore
-        from algorithm.ReinforcementLearning import ReinforcementLearning  # type: ignore
-        StateActionPairContainerSimple = Any  # type: ignore
+from ..agent.StateAction import StateAction
+from ..policy.Policy import Policy
+from .ReinforcementLearning import ReinforcementLearning
+from ..agent.StateActionPairContainer import StateActionPairContainerSimple
 
 S = TypeVar("S")
 A = TypeVar("A")
-try:
-    SAP_CONTAINER = TypeVar("SAP_CONTAINER", default=StateActionPairContainerSimple)
-except TypeError:
-    SAP_CONTAINER = TypeVar("SAP_CONTAINER")
 
 
-class Sarsa(ReinforcementLearning[S, A, SAP_CONTAINER], Generic[S, A, SAP_CONTAINER]):
+class Sarsa(ReinforcementLearning[S, A], Generic[S, A]):
     """Basic on-policy reinforcement learning algorithm.
 
     The same policy is used for both learning and taking action given state.

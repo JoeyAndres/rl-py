@@ -18,12 +18,8 @@ from __future__ import annotations
 
 from typing import Any, Generic, List, TypeVar
 
-try:
-    from .ReinforcementLearningGDFactory import ReinforcementLearningGDFactory
-    from .SarsaETGD import SarsaETGD
-except ImportError:
-    from ReinforcementLearningGDFactory import ReinforcementLearningGDFactory
-    from SarsaETGD import SarsaETGD
+from .ReinforcementLearningGDFactory import ReinforcementLearningGDFactory
+from .SarsaETGD import SarsaETGD
 
 DEFAULT_TILE_CONT = List[float]
 

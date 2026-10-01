@@ -18,35 +18,11 @@ from __future__ import annotations
 
 from typing import Any, Generic, Optional, Sequence, Type, TypeVar
 
-try:
-    from .TileCodeFactory import TileCodeFactory
-except (ImportError, ValueError):
-    try:
-        from TileCodeFactory import TileCodeFactory
-    except ImportError:
-        TileCodeFactory = Generic  # type: ignore
+from .TileCodeFactory import TileCodeFactory
 
-try:
-    from .DimensionInfo import DimensionInfo
-except (ImportError, ValueError):
-    try:
-        from DimensionInfo import DimensionInfo
-    except ImportError:
-        try:
-            from .TileCode import DimensionInfo
-        except (ImportError, ValueError):
-            try:
-                from TileCode import DimensionInfo
-            except ImportError:
-                DimensionInfo = Any  # type: ignore
+from .DimensionInfo import DimensionInfo
 
-try:
-    from .TileCode import TileCode
-except (ImportError, ValueError):
-    try:
-        from TileCode import TileCode
-    except ImportError:
-        TileCode = Any  # type: ignore
+from .TileCode import TileCode
 
 FLOAT = float
 

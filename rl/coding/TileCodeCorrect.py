@@ -20,16 +20,7 @@ from __future__ import annotations
 
 from typing import Any, Generic, List, Sequence, TypeVar
 
-try:
-    from .TileCode import TileCode, DEFAULT_TILE_CONT
-except (ImportError, ValueError):
-    try:
-        from TileCode import TileCode, DEFAULT_TILE_CONT
-    except (ImportError, ValueError):
-        DEFAULT_TILE_CONT = List[float]  # type: ignore
-
-        class TileCode(Generic[Any, Any, Any]):  # type: ignore
-            pass
+from .TileCode import TileCode, DEFAULT_TILE_CONT
 
 D = TypeVar("D")
 NUM_TILINGS = TypeVar("NUM_TILINGS")

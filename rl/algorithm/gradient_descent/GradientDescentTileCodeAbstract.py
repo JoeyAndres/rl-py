@@ -32,48 +32,9 @@ STATE_DIM = TypeVar("STATE_DIM")
 
 floatArray = Sequence[FLOAT]
 
-try:
-    from .GradientDescentAbstract import GradientDescentAbstract
-except ImportError:
-    try:
-        from GradientDescentAbstract import GradientDescentAbstract  # type: ignore
-    except ImportError:
-        try:
-            from rl.algorithm.gradient_descent.GradientDescentAbstract import (  # type: ignore
-                GradientDescentAbstract,
-            )
-        except ImportError:
-            class GradientDescentAbstract(ABC, Generic[D, STATE_DIM]):  # type: ignore
-                def __init__(
-                    self,
-                    courseCode: Any,
-                    stepSize: FLOAT,
-                    discountRate: FLOAT,
-                    lambda_: FLOAT,
-                ) -> None:
-                    self._courseCode = courseCode
-                    self._stepSize = stepSize
-                    self._discountRate = discountRate
-                    self._lambda = lambda_
+from .GradientDescentAbstract import GradientDescentAbstract
 
-try:
-    from ...coding.TileCode import TileCode
-except ImportError:
-    try:
-        from rl.coding.TileCode import TileCode  # type: ignore
-    except ImportError:
-        try:
-            from coding.TileCode import TileCode  # type: ignore
-        except ImportError:
-            try:
-                from TileCode import TileCode  # type: ignore
-            except ImportError:
-                class TileCode(Generic[D, NUM_TILINGS, WEIGHT_CONT]):  # type: ignore
-                    def getValueFromFeatureVector(self, fv: FEATURE_VECTOR) -> FLOAT:
-                        ...
-
-                    def getFeatureVector(self, parameters: Sequence[FLOAT]) -> FEATURE_VECTOR:
-                        ...
+from ...coding.TileCode import TileCode
 
 spTileCode = TileCode
 
@@ -81,7 +42,6 @@ spTileCode = TileCode
 class GradientDescentTileCodeAbstract(
     GradientDescentAbstract[D, STATE_DIM],
     Generic[D, NUM_TILINGS, WEIGHT_CONT, STATE_DIM],
-    ABC,
 ):
     """
     Abstract class for Gradient Descent utilizing tile codes.

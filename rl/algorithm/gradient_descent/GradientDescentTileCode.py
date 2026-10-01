@@ -40,56 +40,7 @@ def concat_array(a: Sequence[Any], b: Sequence[Any]) -> List[Any]:
 
 concatArray = concat_array
 
-try:
-    from .GradientDescentTileCodeAbstract import GradientDescentTileCodeAbstract
-except ImportError:
-    try:
-        from rl.algorithm.gradient_descent.GradientDescentTileCodeAbstract import (
-            GradientDescentTileCodeAbstract,
-        )
-    except ImportError:
-        try:
-            from GradientDescentTileCodeAbstract import (
-                GradientDescentTileCodeAbstract,
-            )
-        except ImportError:
-            class GradientDescentTileCodeAbstract(
-                Generic[D, NUM_TILINGS, WEIGHT_CONT, STATE_DIM]
-            ):
-                def __init__(
-                    self,
-                    tile_code: Any,
-                    step_size: float,
-                    discount_rate: float,
-                    lambda_: float,
-                ) -> None:
-                    self._tile_code = tile_code
-                    self._tileCode = tile_code
-                    self._step_size = step_size
-                    self._stepSize = step_size
-                    self._discount_rate = discount_rate
-                    self._discountRate = discount_rate
-                    self._lambda = lambda_
-
-                def get_value_from_feature_vector(
-                    self, fv: Sequence[int]
-                ) -> float:
-                    return float(self._tile_code.get_value_from_feature_vector(fv))
-
-                def getValueFromFeatureVector(
-                    self, fv: Sequence[int]
-                ) -> float:
-                    return self.get_value_from_feature_vector(fv)
-
-                def get_feature_vector(
-                    self, parameters: Sequence[float]
-                ) -> Sequence[int]:
-                    return self._tile_code.get_feature_vector(parameters)
-
-                def getFeatureVector(
-                    self, parameters: Sequence[float]
-                ) -> Sequence[int]:
-                    return self.get_feature_vector(parameters)
+from .GradientDescentTileCodeAbstract import GradientDescentTileCodeAbstract
 
 
 class GradientDescentTileCode(

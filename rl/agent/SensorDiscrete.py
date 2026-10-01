@@ -23,75 +23,7 @@ from typing import Generic, Optional, Set, Tuple, TypeVar
 
 S = TypeVar("S")
 
-try:
-    from .Sensor import Sensor
-except (ImportError, ModuleNotFoundError):
-    try:
-        from Sensor import Sensor
-    except (ImportError, ModuleNotFoundError):
-        try:
-            from .sensor import Sensor
-        except (ImportError, ModuleNotFoundError):
-            try:
-                from sensor import Sensor
-            except (ImportError, ModuleNotFoundError):
-                class Sensor(Generic[S]):
-                    """Base and interface class for all Sensor objects."""
-
-                    def __init__(self, initial_state: S) -> None:
-                        self._initial_state: S = initial_state
-                        self._last_observed_state: S = initial_state
-                        self._last_observed_reward: float = float("nan")
-
-                    def get_last_observed_state(self) -> S:
-                        return self._last_observed_state
-
-                    def getLastObservedState(self) -> S:
-                        return self.get_last_observed_state()
-
-                    def get_last_observed_reward(self) -> float:
-                        return self._last_observed_reward
-
-                    def getLastObservedReward(self) -> float:
-                        return self.get_last_observed_reward()
-
-                    def set_last_observed_state(self, s: S) -> None:
-                        self._last_observed_state = s
-
-                    def setLastObservedState(self, s: S) -> None:
-                        self.set_last_observed_state(s)
-
-                    def set_initial_state(self, s: S) -> None:
-                        self._initial_state = s
-
-                    def setInitialState(self, s: S) -> None:
-                        self.set_initial_state(s)
-
-                    def set_last_observed_reward(self, r: float) -> None:
-                        self._last_observed_reward = r
-
-                    def setLastObservedReward(self, r: float) -> None:
-                        self.set_last_observed_reward(r)
-
-                    def set_last_observed_state_and_reward(
-                        self, state_and_reward: Tuple[S, float]
-                    ) -> None:
-                        self.set_last_observed_state(state_and_reward[0])
-                        self.set_last_observed_reward(state_and_reward[1])
-
-                    def setLastObservedStateAndReward(
-                        self, stateAndReward: Tuple[S, float]
-                    ) -> None:
-                        self.set_last_observed_state_and_reward(stateAndReward)
-
-                    def reset(self) -> None:
-                        self._last_observed_state = self._initial_state
-
-                    def is_terminal_state(self, state_data: S) -> bool:
-                        raise NotImplementedError
-
-                    def isTerminalState(self, stateData: S) -> bool:
-                        return self.is_terminal_state(stateData)
+from .Sensor import Sensor
 
 
 class SensorDiscrete(Sensor[S]):

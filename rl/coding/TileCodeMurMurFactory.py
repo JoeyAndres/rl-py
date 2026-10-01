@@ -18,14 +18,9 @@ from __future__ import annotations
 
 from typing import Generic, List, Optional, Sequence, TypeVar
 
-try:
-    from .DimensionInfo import DimensionInfo
-    from .TileCodeHashedFactory import TileCodeHashedFactory
-    from .TileCodeMurMur import TileCodeMurMur
-except ImportError:
-    from DimensionInfo import DimensionInfo
-    from TileCodeHashedFactory import TileCodeHashedFactory
-    from TileCodeMurMur import TileCodeMurMur
+from .DimensionInfo import DimensionInfo
+from .TileCodeHashedFactory import TileCodeHashedFactory
+from .TileCodeMurMur import TileCodeMurMur
 
 DEFAULT_TILE_CONT = List[float]
 

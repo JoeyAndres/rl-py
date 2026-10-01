@@ -38,56 +38,7 @@ A = TypeVar("A")
 _SENTINEL = object()
 
 
-try:
-    from .Policy import Policy
-except (ImportError, ValueError):
-    try:
-        from Policy import Policy
-    except (ImportError, ValueError):
-        try:
-            from .policy import Policy
-        except (ImportError, ValueError):
-            try:
-                from policy import Policy
-            except (ImportError, ValueError):
-
-                class Policy(ABC, Generic[S, A]):
-                    """Base class for all Policy.
-
-                    Policy sets the rule for action selection given a mapping of action to
-                    action values and a set of actions.
-                    """
-
-                    @overload
-                    @abstractmethod
-                    def getAction(
-                        self,
-                        actionValues: Mapping[A, float],
-                        actionSet: Collection[A],
-                    ) -> A:
-                        ...
-
-                    @overload
-                    @abstractmethod
-                    def getAction(
-                        self,
-                        actionValues: Mapping[A, float],
-                        actionSet: Collection[A],
-                        maxAction: A,
-                    ) -> A:
-                        ...
-
-                    @abstractmethod
-                    def getAction(
-                        self,
-                        actionValues: Mapping[A, float],
-                        actionSet: Collection[A],
-                        maxAction: Optional[A] = None,
-                    ) -> A:
-                        """Returns action given a mapping of actions to values and a set of actions."""
-                        pass
-
-                    get_action = getAction
+from .Policy import Policy
 
 
 spPolicy = Policy

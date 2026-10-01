@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Generic, Sequence, TypeVar
 
-from ..declares import DEFAULT_TILE_CONT
+from .TileCode import DEFAULT_TILE_CONT
 from .TileCodeCorrect import TileCodeCorrect
 from .TileCodeFactory import TileCodeFactory
 

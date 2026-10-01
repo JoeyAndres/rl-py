@@ -18,12 +18,8 @@ from __future__ import annotations
 
 from typing import Generic, TypeVar
 
-try:
-    from .EpsilonGreedy import EpsilonGreedy
-    from .PolicyFactory import PolicyFactory
-except ImportError:
-    from EpsilonGreedy import EpsilonGreedy
-    from PolicyFactory import PolicyFactory
+from .EpsilonGreedy import EpsilonGreedy
+from .PolicyFactory import PolicyFactory
 
 S = TypeVar("S")
 A = TypeVar("A")

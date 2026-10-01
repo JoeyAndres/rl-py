@@ -18,8 +18,8 @@ from __future__ import annotations
 
 from typing import Generic, TypeVar
 
-from ..utility.factory_abstract import FactoryAbstract
-from .sensor import Sensor
+from ..utility.FactoryAbstract import FactoryAbstract
+from .Sensor import Sensor
 
 S = TypeVar("S")
 

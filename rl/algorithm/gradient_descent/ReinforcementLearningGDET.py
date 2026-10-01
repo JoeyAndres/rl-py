@@ -18,12 +18,8 @@ from __future__ import annotations
 
 from typing import Any, Generic, TypeVar
 
-try:
-    from .ReinforcementLearningGDAbstract import ReinforcementLearningGDAbstract
-    from .GradientDescentTileCodeET import GradientDescentTileCodeET
-except ImportError:
-    from ReinforcementLearningGDAbstract import ReinforcementLearningGDAbstract
-    from GradientDescentTileCodeET import GradientDescentTileCodeET
+from .ReinforcementLearningGDAbstract import ReinforcementLearningGDAbstract
+from .GradientDescentTileCodeET import GradientDescentTileCodeET
 
 D = TypeVar("D")
 NUM_TILINGS = TypeVar("NUM_TILINGS")

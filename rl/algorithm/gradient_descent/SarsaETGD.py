@@ -18,11 +18,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Generic, TypeVar, final
 
-from .reinforcement_learning_gdet import ReinforcementLearningGDET
+from .ReinforcementLearningGDET import ReinforcementLearningGDET
 
 if TYPE_CHECKING:
-    from ...coding.tile_code import TileCode
-    from ...policy.policy import Policy
+    from ...coding.TileCode import TileCode
+    from ...policy.Policy import Policy
 
 D = TypeVar("D", bound=int)
 NumTilings = TypeVar("NumTilings", bound=int)

@@ -18,9 +18,9 @@ from __future__ import annotations
 
 from typing import Generic, TypeVar
 
-from rl.algorithm.reinforcement_learning_factory import ReinforcementLearningFactory
-from rl.algorithm.sarsa_et import SarsaET
-from rl.policy.policy import Policy
+from .ReinforcementLearningFactory import ReinforcementLearningFactory
+from .SarsaET import SarsaET
+from ..policy.Policy import Policy
 
 S = TypeVar("S")
 A = TypeVar("A")

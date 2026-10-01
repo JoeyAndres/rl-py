@@ -24,28 +24,7 @@ from typing import Dict, Generic, Mapping, Optional, Set, TypeVar
 S = TypeVar("S")
 A = TypeVar("A")
 
-try:
-    from .Policy import Policy
-except ImportError:
-    try:
-        from .policy import Policy
-    except ImportError:
-        try:
-            from Policy import Policy  # type: ignore
-        except ImportError:
-            try:
-                from policy import Policy  # type: ignore
-            except ImportError:
-
-                class Policy(Generic[S, A], ABC):  # type: ignore
-                    @abstractmethod
-                    def getAction(
-                        self,
-                        actionValues: Mapping[A, float],
-                        actionSet: Set[A],
-                        maxAction: Optional[A] = None,
-                    ) -> A:
-                        pass
+from .Policy import Policy
 
 
 class Softmax(Policy[S, A], Generic[S, A]):

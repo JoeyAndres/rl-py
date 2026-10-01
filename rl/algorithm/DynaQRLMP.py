@@ -20,70 +20,10 @@ from __future__ import annotations
 
 from typing import Generic, Optional, Set, TypeVar
 
-try:
-    from .DynaQBase import DynaQBase
-    from .ReinforcementLearning import ReinforcementLearning
-    from ..agent.StateAction import StateAction
-    from ..policy.Policy import Policy
-except ImportError:
-    try:
-        from dyna_q_base import DynaQBase
-        from reinforcement_learning import ReinforcementLearning
-        from state_action import StateAction
-        from policy import Policy
-    except ImportError:
-        S_bound = TypeVar("S_bound")
-        A_bound = TypeVar("A_bound")
-
-        class DynaQBase(Generic[S_bound, A_bound]):  # type: ignore[no-redef]
-            def __init__(
-                self,
-                simulation_iteration_count: int,
-                state_transition_greediness: float,
-                state_transition_step_size: float,
-            ) -> None:
-                pass
-
-            def back_up_state_action_pair(
-                self,
-                current_state_action: StateAction[S_bound, A_bound],
-                reward: float,
-                next_state_action_pair: StateAction[S_bound, A_bound],
-            ) -> None:
-                pass
-
-            def arg_max(
-                self, state: Optional[S_bound], action_set: Set[A_bound]
-            ) -> Optional[A_bound]:
-                pass
-
-        class ReinforcementLearning(Generic[S_bound, A_bound]):  # type: ignore[no-redef]
-            def __init__(
-                self,
-                step_size: float,
-                discount_rate: float,
-                policy: Optional[Policy[S_bound, A_bound]],
-            ) -> None:
-                pass
-
-            def back_up_state_action_pair(
-                self,
-                current_state_action: StateAction[S_bound, A_bound],
-                reward: float,
-                next_state_action_pair: StateAction[S_bound, A_bound],
-            ) -> None:
-                pass
-
-            def arg_max(
-                self, state: Optional[S_bound], action_set: Set[A_bound]
-            ) -> Optional[A_bound]:
-                pass
-
-        class StateAction(Generic[S_bound, A_bound]):  # type: ignore[no-redef]
-            pass
-
-        class Policy(Generic[S_bound, A_bound]):  # type: ignore[no-redef]
-            pass
+from .DynaQBase import DynaQBase
+from .ReinforcementLearning import ReinforcementLearning
+from ..agent.StateAction import StateAction
+from ..policy.Policy import Policy
 
 
 S = TypeVar("S")

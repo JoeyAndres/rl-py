@@ -7,38 +7,8 @@ from typing import Dict, Generic, Set, TypeVar
 S = TypeVar("S")
 A = TypeVar("A")
 
-try:
-    from ..agent.StateAction import StateAction
-    from ..agent.StateActionTransition import StateActionTransition
-except (ImportError, ValueError):
-    try:
-        from rl.agent.StateAction import StateAction
-        from rl.agent.StateActionTransition import StateActionTransition
-    except (ImportError, ValueError):
-        class StateAction(Generic[S, A]):
-            def __init__(self, state: S, action: A) -> None:
-                self._state = state
-                self._action = action
-
-            def getState(self) -> S:
-                return self._state
-
-            def getAction(self) -> A:
-                return self._action
-
-        class StateActionTransition(Generic[S]):
-            def __init__(self, greediness: float, step_size: float) -> None:
-                self.greediness = greediness
-                self.step_size = step_size
-
-            def update(self, next_state: S, reward: float) -> None:
-                pass
-
-            def getReward(self, state: S) -> float:
-                return 0.0
-
-            def getNextState(self) -> S:
-                raise NotImplementedError
+from ..agent.StateAction import StateAction
+from ..agent.StateActionTransition import StateActionTransition
 
 
 class DynaQBase(Generic[S, A], ABC):

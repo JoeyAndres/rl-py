@@ -46,179 +46,19 @@ def concat_array(a1: Sequence[Any], a2: Sequence[Any]) -> Tuple[Any, ...]:
 concatArray = concat_array
 
 
-try:
-    from rl.agent.StateAction import StateAction
-except ImportError:
-    class StateAction(Generic[S, A]):
-        def __init__(self, state: S, action: A) -> None:
-            self._state: S = state
-            self._action: A = action
-
-        def get_state(self) -> S:
-            return self._state
-
-        def getState(self) -> S:
-            return self._state
-
-        def get_action(self) -> A:
-            return self._action
-
-        def getAction(self) -> A:
-            return self._action
-
-        def set_state(self, state: S) -> None:
-            self._state = state
-
-        def setState(self, state: S) -> None:
-            self._state = state
-
-        def set_action(self, action: A) -> None:
-            self._action = action
-
-        def setAction(self, action: A) -> None:
-            self._action = action
+from ...agent.StateAction import StateAction
 
 
-try:
-    from rl.policy.Policy import Policy
-except ImportError:
-    class Policy(Generic[S, A], ABC):
-        @abstractmethod
-        def get_action(
-            self,
-            action_value_map: Dict[A, float],
-            action_set: Set[A],
-            max_action: Optional[A] = None,
-        ) -> A:
-            pass
-
-        def getAction(
-            self,
-            action_value_map: Dict[A, float],
-            action_set: Set[A],
-            max_action: Optional[A] = None,
-        ) -> A:
-            return self.get_action(action_value_map, action_set, max_action)
-
-        def reset(self) -> None:
-            pass
+from ...policy.Policy import Policy
 
 
-try:
-    from rl.coding.CourseCode import CourseCode
-except ImportError:
-    class CourseCode(Generic[S]):
-        pass
+from ...coding.CourseCode import CourseCode
 
 
-try:
-    from rl.algorithm.gradient_descent.GradientDescentAbstract import (
-        GradientDescentAbstract,
-    )
-except ImportError:
-    class GradientDescentAbstract(Generic[StateParam, ActionParam], ABC):
-        ACTION_DIM: int = 0
-
-        @abstractmethod
-        def build_action_values(
-            self, action_set: Set[ActionParam], next_state: StateParam
-        ) -> Tuple[Dict[ActionParam, float], ActionParam]:
-            pass
-
-        buildActionValues = build_action_values
-
-        @abstractmethod
-        def update_weights(
-            self,
-            current_state: StateParam,
-            current_action: ActionParam,
-            next_state: StateParam,
-            next_action_value: float,
-            reward: float,
-        ) -> None:
-            pass
-
-        updateWeights = update_weights
-
-        @abstractmethod
-        def get_value_from_parameters(self, params: Sequence[float]) -> float:
-            pass
-
-        getValueFromParameters = get_value_from_parameters
+from .GradientDescentAbstract import GradientDescentAbstract
 
 
-try:
-    from rl.algorithm.LearningAlgorithm import LearningAlgorithm
-except ImportError:
-    class LearningAlgorithm(Generic[S, A], ABC):
-        def __init__(self, control_policy: Optional[Policy[S, A]] = None) -> None:
-            self._control_policy: Optional[Policy[S, A]] = control_policy
-            self._learning_policy: Optional[Policy[S, A]] = control_policy
-            self._default_state_action_value: float = 0.0
-
-        @abstractmethod
-        def update(
-            self,
-            current_state_action: StateAction[S, A],
-            next_state: S,
-            reward: float,
-            action_set: Set[A],
-        ) -> None:
-            pass
-
-        @abstractmethod
-        def get_action(self, state: S, action_set: Set[A]) -> A:
-            pass
-
-        getAction = get_action
-
-        @abstractmethod
-        def get_state_action_value(self, state_action: StateAction[S, A]) -> float:
-            pass
-
-        getStateActionValue = get_state_action_value
-
-        def set_control_policy(self, policy: Policy[S, A]) -> None:
-            self._control_policy = policy
-
-        setControlPolicy = set_control_policy
-
-        def get_control_policy(self) -> Optional[Policy[S, A]]:
-            return self._control_policy
-
-        getControlPolicy = get_control_policy
-
-        def set_learning_policy(self, policy: Policy[S, A]) -> None:
-            self._learning_policy = policy
-
-        setLearningPolicy = set_learning_policy
-
-        def get_learning_policy(self) -> Optional[Policy[S, A]]:
-            return self._learning_policy
-
-        getLearningPolicy = get_learning_policy
-
-        def reset(self) -> None:
-            if self._control_policy is not None:
-                self._control_policy.reset()
-            if self._learning_policy is not None:
-                self._learning_policy.reset()
-
-        def _get_learning_policy_action(
-            self,
-            action_value_map: Dict[A, float],
-            action_set: Set[A],
-            max_action: Optional[A] = None,
-        ) -> A:
-            if self._learning_policy is not None:
-                return self._learning_policy.get_action(
-                    action_value_map, action_set, max_action
-                )
-            if max_action is not None:
-                return max_action
-            return next(iter(action_set))
-
-        _getLearningPolicyAction = _get_learning_policy_action
+from ..LearningAlgorithm import LearningAlgorithm
 
 
 class ReinforcementLearningGDAbstract(

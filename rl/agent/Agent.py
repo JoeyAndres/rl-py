@@ -25,50 +25,10 @@ MAX_EPISODES: int = 100000
 FLOAT = float
 UINT = int
 
-try:
-    from rl.agent.ActionContainer import ActionContainer
-    from rl.agent.Environment import Environment
-    from rl.agent.StateAction import StateAction
-    from rl.algorithm.LearningAlgorithm import LearningAlgorithm
-except (ImportError, ModuleNotFoundError):
-    try:
-        from rl.agent.action_container import ActionContainer
-        from rl.agent.environment import Environment
-        from rl.agent.state_action import StateAction
-        from rl.algorithm.learning_algorithm import LearningAlgorithm
-    except (ImportError, ModuleNotFoundError):
-        try:
-            from .ActionContainer import ActionContainer
-            from .Environment import Environment
-            from .StateAction import StateAction
-            from ..algorithm.LearningAlgorithm import LearningAlgorithm
-        except (ImportError, ModuleNotFoundError, ValueError):
-            try:
-                from .action_container import ActionContainer
-                from .environment import Environment
-                from .state_action import StateAction
-                from ..algorithm.learning_algorithm import LearningAlgorithm
-            except (ImportError, ModuleNotFoundError, ValueError):
-                ActionContainer = Any  # type: ignore[assignment,misc]
-                Environment = Any  # type: ignore[assignment,misc]
-                LearningAlgorithm = Any  # type: ignore[assignment,misc]
-
-                class StateAction(Generic[S, A]):  # type: ignore[no-redef]
-                    def __init__(self, state: S, action: A) -> None:
-                        self.state: S = state
-                        self.action: A = action
-
-                    def getState(self) -> S:
-                        return self.state
-
-                    def getAction(self) -> A:
-                        return self.action
-
-                    def get_state(self) -> S:
-                        return self.state
-
-                    def get_action(self) -> A:
-                        return self.action
+from .ActionContainer import ActionContainer
+from .Environment import Environment
+from .StateAction import StateAction
+from ..algorithm.LearningAlgorithm import LearningAlgorithm
 
 
 def _get_action_set(container: Any) -> Any:

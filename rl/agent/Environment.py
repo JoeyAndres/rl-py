@@ -26,72 +26,11 @@ A = TypeVar("A")
 StateAndReward = Tuple[S, float]
 spStateAndReward = StateAndReward
 
-try:
-    from .actuator import Actuator
-except ImportError:
-    try:
-        from .Actuator import Actuator
-    except ImportError:
-        try:
-            from actuator import Actuator  # type: ignore
-        except ImportError:
-            try:
-                from Actuator import Actuator  # type: ignore
-            except ImportError:
-                class Actuator(Generic[A]):  # type: ignore
-                    pass
+from .Actuator import Actuator
 
-try:
-    from .sensor import Sensor
-except ImportError:
-    try:
-        from .Sensor import Sensor
-    except ImportError:
-        try:
-            from sensor import Sensor  # type: ignore
-        except ImportError:
-            try:
-                from Sensor import Sensor  # type: ignore
-            except ImportError:
-                class Sensor(Generic[S]):  # type: ignore
-                    pass
+from .Sensor import Sensor
 
-try:
-    from .state_action import StateAction
-except ImportError:
-    try:
-        from .StateAction import StateAction
-    except ImportError:
-        try:
-            from state_action import StateAction  # type: ignore
-        except ImportError:
-            try:
-                from StateAction import StateAction  # type: ignore
-            except ImportError:
-                class StateAction(Generic[S, A]):  # type: ignore
-                    def __init__(self, state: S, action: A) -> None:
-                        self._state = state
-                        self._action = action
-
-                    @property
-                    def state(self) -> S:
-                        return self._state
-
-                    @property
-                    def action(self) -> A:
-                        return self._action
-
-                    def get_state(self) -> S:
-                        return self._state
-
-                    def getState(self) -> S:
-                        return self._state
-
-                    def get_action(self) -> A:
-                        return self._action
-
-                    def getAction(self) -> A:
-                        return self._action
+from .StateAction import StateAction
 
 
 class Environment(ABC, Generic[S, A]):

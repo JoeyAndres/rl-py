@@ -18,14 +18,9 @@ from __future__ import annotations
 
 from typing import Generic, TypeVar
 
-try:
-    from .QLearningET import QLearningET
-    from .ReinforcementLearningFactory import ReinforcementLearningFactory
-    from ..policy.Policy import Policy
-except ImportError:
-    from rl.algorithm.QLearningET import QLearningET
-    from rl.algorithm.ReinforcementLearningFactory import ReinforcementLearningFactory
-    from rl.policy.Policy import Policy
+from .QLearningET import QLearningET
+from .ReinforcementLearningFactory import ReinforcementLearningFactory
+from ..policy.Policy import Policy
 
 S = TypeVar("S")
 A = TypeVar("A")

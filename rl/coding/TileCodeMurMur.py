@@ -35,68 +35,10 @@ except ImportError:
     def override(func: Any) -> Any:
         return func
 
-try:
-    from ..hash.HashMurmur3 import HashMurmur3Out, Murmur3
-    from .TileCode import DEFAULT_TILE_CONT, TileCode
-    from .DimensionInfo import DimensionInfo
-    from ..declares import BYTE, FEATURE_VECTOR, FLOAT, INT, UINT, floatArray
-except (ImportError, ValueError):
-    try:
-        from rl.hash.HashMurmur3 import HashMurmur3Out, Murmur3
-        from rl.coding.TileCode import DEFAULT_TILE_CONT, TileCode
-        from rl.coding.DimensionInfo import DimensionInfo
-        from rl.declares import BYTE, FEATURE_VECTOR, FLOAT, INT, UINT, floatArray
-    except ImportError:
-        FLOAT = float
-        INT = int
-        UINT = int
-        BYTE = int
-        FEATURE_VECTOR = List[int]
-        floatArray = Sequence[float]
-        DEFAULT_TILE_CONT = List[float]
-
-        _T = TypeVar("_T")
-
-        class DimensionInfo(Generic[_T]):
-            pass
-
-        class HashMurmur3Out:
-            hashVal: List[int]
-
-            def __init__(self, hash_val: Optional[List[int]] = None) -> None:
-                self.hashVal = hash_val if hash_val is not None else [0, 0]
-
-        class Murmur3:
-            def hash(
-                self, byte_array: bytes, length: Optional[int] = None
-            ) -> HashMurmur3Out:
-                raise NotImplementedError
-
-        _D_dummy = TypeVar("_D_dummy")
-        _NUM_TILINGS_dummy = TypeVar("_NUM_TILINGS_dummy")
-        _WEIGHT_CONT_dummy = TypeVar("_WEIGHT_CONT_dummy")
-
-        class TileCode(Generic[_D_dummy, _NUM_TILINGS_dummy, _WEIGHT_CONT_dummy]):
-            def __init__(
-                self,
-                dimensional_infos: Sequence[DimensionInfo[FLOAT]],
-                size_hint: Optional[int] = None,
-                *args: Any,
-                **kwargs: Any,
-            ) -> None:
-                self._dimensionalInfos = dimensional_infos
-                self._sizeCache = size_hint if size_hint is not None else 0
-
-            def getDimension(self) -> int:
-                return len(self._dimensionalInfos)
-
-            def getNumTilings(self) -> int:
-                return 0
-
-            def paramToGridValue(
-                self, param: float, tiling_index: int, dimension_index: int
-            ) -> int:
-                return 0
+from ..hash.HashMurmur3 import HashMurmur3Out, Murmur3
+from .TileCode import DEFAULT_TILE_CONT, TileCode
+from .DimensionInfo import DimensionInfo
+from ..declares import BYTE, FEATURE_VECTOR, FLOAT, INT, UINT, floatArray
 
 
 D = TypeVar("D")

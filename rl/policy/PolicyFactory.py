@@ -19,16 +19,8 @@ from __future__ import annotations
 from abc import ABC
 from typing import Generic, TypeVar
 
-try:
-    from ..utility.FactoryAbstract import FactoryAbstract
-    from .Policy import Policy
-except (ImportError, ValueError):
-    try:
-        from rl.utility.FactoryAbstract import FactoryAbstract
-        from rl.policy.Policy import Policy
-    except ImportError:
-        from FactoryAbstract import FactoryAbstract
-        from Policy import Policy
+from ..utility.FactoryAbstract import FactoryAbstract
+from .Policy import Policy
 
 S = TypeVar("S")
 A = TypeVar("A")

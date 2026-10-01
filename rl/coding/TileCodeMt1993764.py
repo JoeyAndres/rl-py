@@ -26,37 +26,10 @@ from typing import (
     Union,
 )
 
-try:
-    from .TileCode import TileCode, DEFAULT_TILE_CONT
-    from .DimensionInfo import DimensionInfo
-except (ImportError, ValueError):
-    try:
-        from rl.coding.TileCode import TileCode, DEFAULT_TILE_CONT
-        from rl.coding.DimensionInfo import DimensionInfo
-    except (ImportError, ValueError):
-        try:
-            from TileCode import TileCode, DEFAULT_TILE_CONT  # type: ignore
-            from DimensionInfo import DimensionInfo  # type: ignore
-        except (ImportError, ValueError):
-            DEFAULT_TILE_CONT = List[float]  # type: ignore
+from .TileCode import TileCode, DEFAULT_TILE_CONT
+from .DimensionInfo import DimensionInfo
 
-            class DimensionInfo(Generic[TypeVar("T")]):  # type: ignore
-                pass
-
-            class TileCode(Generic[TypeVar("D_T"), TypeVar("NUM_T"), TypeVar("W_T")]):  # type: ignore
-                def __init__(self, *args: Any, **kwargs: Any) -> None:
-                    pass
-
-try:
-    from ..declares import FLOAT, INT, FEATURE_VECTOR, floatArray
-except (ImportError, ValueError):
-    try:
-        from rl.declares import FLOAT, INT, FEATURE_VECTOR, floatArray
-    except (ImportError, ValueError):
-        FLOAT = float  # type: ignore
-        INT = int  # type: ignore
-        FEATURE_VECTOR = List[int]  # type: ignore
-        floatArray = Sequence[float]  # type: ignore
+from ..declares import FLOAT, INT, FEATURE_VECTOR, floatArray
 
 
 class seed_seq:

@@ -18,16 +18,10 @@ from __future__ import annotations
 
 from typing import Generic, List, Optional, Sequence, TypeVar, overload
 
-try:
-    from ..declares import DEFAULT_TILE_CONT, FLOAT
-    from .DimensionInfo import DimensionInfo
-    from .TileCodeHashedFactory import TileCodeHashedFactory
-    from .TileCodeMt1993764 import TileCodeMt1993764
-except (ImportError, ValueError):
-    from declares import DEFAULT_TILE_CONT, FLOAT
-    from DimensionInfo import DimensionInfo
-    from TileCodeHashedFactory import TileCodeHashedFactory
-    from TileCodeMt1993764 import TileCodeMt1993764
+from .TileCode import DEFAULT_TILE_CONT, FLOAT
+from .DimensionInfo import DimensionInfo
+from .TileCodeHashedFactory import TileCodeHashedFactory
+from .TileCodeMt1993764 import TileCodeMt1993764
 
 D = TypeVar("D", bound=int)
 NUM_TILINGS = TypeVar("NUM_TILINGS", bound=int)

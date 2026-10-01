@@ -18,10 +18,7 @@ from __future__ import annotations
 
 from typing import Any, Generic, TypeVar, final
 
-try:
-    from .ReinforcementLearningGD import ReinforcementLearningGD
-except (ImportError, ValueError):
-    from ReinforcementLearningGD import ReinforcementLearningGD  # type: ignore
+from .ReinforcementLearningGD import ReinforcementLearningGD
 
 D = TypeVar("D")
 NUM_TILINGS = TypeVar("NUM_TILINGS")

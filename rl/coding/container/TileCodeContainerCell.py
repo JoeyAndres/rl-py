@@ -21,15 +21,7 @@ import sys
 from typing import Any, Optional, Union
 
 # Database connection placeholder or external module import
-try:
-    from rl import db
-except ImportError:
-    try:
-        import db
-    except ImportError:
-        class _DbNamespace:
-            session: Any = None
-        db = _DbNamespace()
+from ... import db
 
 FLOAT = float
 

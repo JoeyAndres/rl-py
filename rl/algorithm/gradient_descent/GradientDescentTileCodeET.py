@@ -26,53 +26,7 @@ def concat_array(a: Sequence[float], b: Sequence[float]) -> List[float]:
 concatArray = concat_array
 
 
-try:
-    from .GradientDescentTileCodeAbstract import GradientDescentTileCodeAbstract
-except ImportError:
-    try:
-        from GradientDescentTileCodeAbstract import GradientDescentTileCodeAbstract  # type: ignore
-    except ImportError:
-        class GradientDescentTileCodeAbstract(Generic[D, NUM_TILINGS, WEIGHT_CONT, STATE_DIM]):  # type: ignore
-            def __init__(
-                self,
-                tile_code: Any,
-                step_size: float,
-                discount_rate: float,
-                lambda_: float,
-            ) -> None:
-                self._tile_code = tile_code
-                self._course_code = tile_code
-                self._step_size = step_size
-                self._discount_rate = discount_rate
-                self._lambda = lambda_
-                self._discount_rate_times_lambda = discount_rate * lambda_
-
-            def get_size(self) -> int:
-                if hasattr(self._course_code, "get_size"):
-                    return self._course_code.get_size()
-                if hasattr(self._course_code, "getSize"):
-                    return self._course_code.getSize()
-                return len(self._course_code)
-
-            getSize = get_size
-
-            def get_feature_vector(self, parameters: Sequence[float]) -> FEATURE_VECTOR:
-                if hasattr(self._tile_code, "get_feature_vector"):
-                    return self._tile_code.get_feature_vector(parameters)
-                if hasattr(self._tile_code, "getFeatureVector"):
-                    return self._tile_code.getFeatureVector(parameters)
-                raise NotImplementedError
-
-            getFeatureVector = get_feature_vector
-
-            def get_value_from_feature_vector(self, fv: FEATURE_VECTOR) -> float:
-                if hasattr(self._tile_code, "get_value_from_feature_vector"):
-                    return self._tile_code.get_value_from_feature_vector(fv)
-                if hasattr(self._tile_code, "getValueFromFeatureVector"):
-                    return self._tile_code.getValueFromFeatureVector(fv)
-                raise NotImplementedError
-
-            getValueFromFeatureVector = get_value_from_feature_vector
+from .GradientDescentTileCodeAbstract import GradientDescentTileCodeAbstract
 
 
 class GradientDescentTileCodeET(

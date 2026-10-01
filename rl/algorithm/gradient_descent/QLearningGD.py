@@ -18,15 +18,7 @@ from __future__ import annotations
 
 from typing import Any, Generic, List, TypeVar
 
-try:
-    from .ReinforcementLearningGD import ReinforcementLearningGD
-except ImportError:
-    try:
-        from rl.algorithm.gradient_descent.ReinforcementLearningGD import (
-            ReinforcementLearningGD,
-        )
-    except ImportError:
-        from ReinforcementLearningGD import ReinforcementLearningGD  # type: ignore
+from .ReinforcementLearningGD import ReinforcementLearningGD
 
 DEFAULT_TILE_CONT = List[float]
 

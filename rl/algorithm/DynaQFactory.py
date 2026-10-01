@@ -18,14 +18,9 @@ from __future__ import annotations
 
 from typing import Generic, TypeVar
 
-try:
-    from .ReinforcementLearningFactory import ReinforcementLearningFactory
-    from .DynaQ import DynaQ
-    from ..policy.Policy import Policy
-except (ImportError, ValueError):
-    from ReinforcementLearningFactory import ReinforcementLearningFactory  # type: ignore
-    from DynaQ import DynaQ  # type: ignore
-    from Policy import Policy  # type: ignore
+from .ReinforcementLearningFactory import ReinforcementLearningFactory
+from .DynaQ import DynaQ
+from ..policy.Policy import Policy
 
 S = TypeVar("S")
 A = TypeVar("A")
