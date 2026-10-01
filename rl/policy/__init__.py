@@ -1,4 +1,4 @@
-"""Auto-generated re-exports. See tools/gen_inits.py."""
+"""Re-exports the public classes of this package."""
 
 from .EpsilonGreedy import spPolicy, EpsilonGreedy, spEpsilonGreedy
 from .EpsilonGreedyFactory import EpsilonGreedyFactory

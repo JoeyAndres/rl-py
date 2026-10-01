@@ -1,72 +1,52 @@
-# rl - Reinforcement Learning
-# Copyright (C) 2016  Joey Andres<yeojserdna@gmail.com>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""Cassandra-backed weight storage. Mirrors the C++ ENABLE_DB-only tests.
 
-"""TileCodeContainer, encapsulates the weight storage in tile code."""
+Run with RL_ENABLE_DB=1 and a Cassandra node on 127.0.0.1.
+"""
+import os
 
 import pytest
-import rl.db
-from rl.coding import TileCodeContainer
+
+pytestmark = pytest.mark.skipif(
+    not os.environ.get("RL_ENABLE_DB"), reason="requires Cassandra (set RL_ENABLE_DB=1)"
+)
 
 
-def test_schema_created_when_db_initialized():
-    # GIVEN Uninitialized underlying db
-    # WHEN Created
-    # THEN Schema is created
-    rl.db.initialize()
+@pytest.fixture
+def tcc():
+    from rl.coding import TileCodeContainer
+
+    container = TileCodeContainer(1000, 0.0)
+    yield container
+    container.delete2()
 
 
-def test_tile_code_container_created_in_db():
-    # GIVEN Initialized underlying db
-    # WHEN New TileCodeContainer instance is created with the id agnostic constructor
-    tcc = TileCodeContainer("id1", 1000, 0.0)
-    # THEN It is added in db
-    tcc.delete2()
-
-
-def test_tile_code_container_member_access():
-    # GIVEN An inserted TileCodeContainer
-    tcc = TileCodeContainer("id2", 1000, 0.0)
-
-    # WHEN A member is accessed.
-    # THEN It is first 0.0
+def test_container_member_starts_at_zero(tcc):
     assert tcc[0] == 0.0
 
 
-def test_tile_code_container_member_modification():
-    # GIVEN An inserted TileCodeContainer
-    tcc = TileCodeContainer("id2", 1000, 0.0)
-
-    # WHEN A member is modified
-    # THEN It is modified
+def test_container_member_is_modified(tcc):
     tcc[0] = 69.0
     assert tcc[0] == 69.0
     assert tcc[1] == 0.0  # Sanity check.
 
 
-def test_tile_code_container_deletion():
-    # GIVEN An inserted TileCodeContainer
-    tcc = TileCodeContainer("id2", 1000, 0.0)
+@pytest.mark.parametrize("index", [0, 23, 50, 99])
+def test_cell_starts_at_zero(tcc, index):
+    from rl.coding import TileCodeContainerCell
 
-    # WHEN TileCodeContainer is deleted
-    # THEN id disappears
-    tcc.delete2()
+    assert TileCodeContainerCell(tcc.getID(), 0, index) == 0.0
 
 
-def test_db_terminate():
-    # GIVEN Initialized underlying db
-    # WHEN Terminate
-    # THEN Connection is ceased.
-    rl.db.terminate()
+@pytest.mark.parametrize("index,value", [(0, 69.0), (99, -37.0)])
+def test_cell_set(tcc, index, value):
+    from rl.coding import TileCodeContainerCell
+
+    cell = TileCodeContainerCell(tcc.getID(), 0, index)
+    cell.set(value)
+    assert cell == value
+
+
+def test_segment_element_exists(tcc):
+    from rl.coding import TileCodeContainerSegment
+
+    assert TileCodeContainerSegment(tcc.getID(), 0).at(0) == 0.0

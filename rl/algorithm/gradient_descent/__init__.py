@@ -1,4 +1,4 @@
-"""Auto-generated re-exports. See tools/gen_inits.py."""
+"""Re-exports the public classes of this package."""
 
 from .GradientDescentAbstract import GradientDescentAbstract, spGradientDescentAbstract
 from .GradientDescentTileCode import GradientDescentTileCode
