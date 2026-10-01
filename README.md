@@ -38,7 +38,7 @@ for _ in range(100):
 ## Tests
 
 ```sh
-python -m venv .venv && .venv/bin/pip install -e . pytest pytest-timeout
+python -m venv .venv && .venv/bin/pip install -e . pytest pytest-timeout pytest-rerunfailures
 .venv/bin/pytest -m "not slow"   # ~1s
 .venv/bin/pytest                 # includes mountain car convergence (~1.5 min)
 ```

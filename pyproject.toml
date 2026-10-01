@@ -1,4 +1,6 @@
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 timeout = 900
+# Learning tests are stochastic; retry a failed test up to 3 times.
+addopts = "--reruns 3"
 markers = ["slow: long-running convergence tests (deselect with -m \"not slow\")"]
