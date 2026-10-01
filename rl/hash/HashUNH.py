@@ -52,7 +52,8 @@ def hashUNH(
     global _rndseq
     if _rndseq is None:
         _rndseq = []
-        # Linear congruential generator equivalent to std::minstd_rand0
+        # std::default_random_engine is implementation-defined; this matches
+        # libstdc++ (std::minstd_rand0). libc++ uses std::minstd_rand (48271).
         state = 1
         for _ in range(2048):
             val = 0
@@ -72,9 +73,8 @@ def hashUNH(
             idx += 2048
         sum_val += _rndseq[idx]
 
-    idx = sum_val % memory_size
-    if idx < 0:
-        idx += memory_size
+    # C++ computes int64 % size_t, which converts the sum to unsigned 64-bit.
+    idx = (sum_val & 0xFFFFFFFFFFFFFFFF) % memory_size
 
     return idx
 

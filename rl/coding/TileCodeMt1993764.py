@@ -72,12 +72,8 @@ class seed_seq:
         m = max(s + 1, n)
 
         for k in range(m):
-            arg = (
-                dest[k % n]
-                ^ dest[(k + p) % n]
-                ^ (dest[(k + n - 1) % n] >> 27)
-            ) & 0xFFFFFFFF
-            r1 = (1664525 * arg) & 0xFFFFFFFF
+            x = dest[k % n] ^ dest[(k + p) % n] ^ dest[(k + n - 1) % n]
+            r1 = (1664525 * (x ^ (x >> 27))) & 0xFFFFFFFF
             if k == 0:
                 r2 = (r1 + s) & 0xFFFFFFFF
             elif 1 <= k <= s:
@@ -86,17 +82,15 @@ class seed_seq:
                 r2 = (r1 + (k % n)) & 0xFFFFFFFF
             dest[(k + p) % n] = (dest[(k + p) % n] + r1) & 0xFFFFFFFF
             dest[(k + q) % n] = (dest[(k + q) % n] + r2) & 0xFFFFFFFF
+            dest[k % n] = r2
 
         for k in range(m, m + n):
-            arg = (
-                dest[k % n]
-                + dest[(k + p) % n]
-                + (dest[(k + n - 1) % n] >> 27)
-            ) & 0xFFFFFFFF
-            r3 = (1566083941 * arg) & 0xFFFFFFFF
+            x = (dest[k % n] + dest[(k + p) % n] + dest[(k + n - 1) % n]) & 0xFFFFFFFF
+            r3 = (1566083941 * (x ^ (x >> 27))) & 0xFFFFFFFF
             r4 = (r3 - (k % n)) & 0xFFFFFFFF
             dest[(k + p) % n] = (dest[(k + p) % n] ^ r3) & 0xFFFFFFFF
             dest[(k + q) % n] = (dest[(k + q) % n] ^ r4) & 0xFFFFFFFF
+            dest[k % n] = r4
 
         return dest
 
