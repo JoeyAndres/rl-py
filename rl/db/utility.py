@@ -54,8 +54,8 @@ class DatabaseUtilityInterface(ABC):
         pass
 
     @abstractmethod
-    def execute_statement(self, stmt_str: str) -> None:
-        """Execute a CQL statement."""
+    def execute_statement(self, stmt_str: str) -> Optional[Any]:
+        """Execute a CQL statement and return its result."""
         pass
 
     @abstractmethod
@@ -170,18 +170,19 @@ class DBUtility(DatabaseUtilityInterface):
 
         self._connect_future = None
 
-    def execute_statement(self, stmt_str: str) -> None:
+    def execute_statement(self, stmt_str: str) -> Optional[Any]:
         if self._session is None:
             sys.stderr.write("Session is not initialized.\n")
-            return
+            return None
 
         try:
-            self._session.execute(stmt_str)
+            return self._session.execute(stmt_str)
         except Exception as e:
             sys.stderr.write(f"{e}\n")
+            return None
 
-    def executeStatement(self, stmt_str: str) -> None:
-        self.execute_statement(stmt_str)
+    def executeStatement(self, stmt_str: str) -> Optional[Any]:
+        return self.execute_statement(stmt_str)
 
     def create_keyspace(self) -> None:
         self.execute_statement(RLKeySpace)
@@ -227,12 +228,12 @@ def terminate() -> None:
     connectFuture = None
 
 
-def executeStatement(stmtStr: str) -> None:
-    _default_instance.execute_statement(stmtStr)
+def executeStatement(stmtStr: str) -> Optional[Any]:
+    return _default_instance.execute_statement(stmtStr)
 
 
-def execute_statement(stmt_str: str) -> None:
-    _default_instance.execute_statement(stmt_str)
+def execute_statement(stmt_str: str) -> Optional[Any]:
+    return _default_instance.execute_statement(stmt_str)
 
 
 def createKeySpace() -> None:

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from abc import ABC, abstractmethod
 from typing import Generic, List, Optional, Sequence, TypeVar, Union
+from .HashInterface import HashInterface
 
 MURMUR_HASH_SEED: int = 0x666
 _MASK64: int = 0xFFFFFFFFFFFFFFFF
@@ -169,19 +170,6 @@ def MurmurHash3_x64_128(
 
 
 T = TypeVar("T")
-
-
-class HashInterface(ABC, Generic[T]):
-    """Interface for all hash encapsulation."""
-
-    @abstractmethod
-    def hash(
-        self,
-        byte_array: Union[bytes, bytearray, Sequence[int]],
-        length: Optional[int] = None,
-    ) -> T:
-        """Calculate hash of byte_array."""
-        pass
 
 
 class Murmur3(HashInterface[HashMurmur3Out]):

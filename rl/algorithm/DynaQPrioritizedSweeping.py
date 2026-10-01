@@ -41,31 +41,12 @@ from ..agent.StateAction import StateAction
 from ..agent.StateActionTransition import StateActionTransition
 from ..policy.Policy import Policy
 from .DynaQ import DynaQ
+from ..agent.StateActionPairValueComparison import StateActionPairValueComparison
 
 
 class StateActionPair(NamedTuple, Generic[S, A]):
     first: StateAction[S, A]
     second: float
-
-
-class StateActionPairValueComparison(Generic[S, A]):
-    """Comparison object for StateActionPair used in priority queue."""
-
-    def __call__(
-        self,
-        lhs: Union[Tuple[StateAction[S, A], float], StateActionPair[S, A]],
-        rhs: Union[Tuple[StateAction[S, A], float], StateActionPair[S, A]],
-    ) -> bool:
-        lhs_sa, lhs_val = lhs[0], lhs[1]
-        rhs_sa, rhs_val = rhs[0], rhs[1]
-        try:
-            if lhs_sa < rhs_sa:
-                return True
-            elif lhs_sa > rhs_sa:
-                return False
-        except TypeError:
-            pass
-        return lhs_val < rhs_val
 
 
 class PriorityQueue(Generic[S, A]):

@@ -21,6 +21,7 @@ from __future__ import annotations
 import struct
 from abc import ABC, abstractmethod
 from typing import Any, Generic, List, Optional, Sequence, TypeVar, Union, overload
+from .HashInterface import HashInterface
 
 # Type aliases representing rl types
 INT = int
@@ -88,42 +89,6 @@ def _to_int64_coordinates(data: Union[bytes, bytearray, Sequence[int]]) -> List[
     return [int(x) for x in data]
 
 
-class HashInterface(ABC, Generic[RET]):
-    """Interface for all hash encapsulation.
-
-    Equivalent to C++ template<class RET> class HashInterface.
-    """
-
-    @overload
-    @abstractmethod
-    def hash(self, byte_array: Sequence[int], length: int) -> RET:
-        ...
-
-    @overload
-    @abstractmethod
-    def hash(self, byte_array: Union[bytes, bytearray, Sequence[int]]) -> RET:
-        ...
-
-    @abstractmethod
-    def hash(
-        self,
-        byte_array: Union[bytes, bytearray, Sequence[int]],
-        length: Optional[int] = None,
-        **kwargs: Any,
-    ) -> RET:
-        """Compute the hash of the byte array.
-
-        Args:
-            byte_array: Byte array or sequence of values to hash.
-            length: Optional length of the array to hash.
-            **kwargs: Additional keyword arguments (e.g. len).
-
-        Returns:
-            The computed hash value of type RET.
-        """
-        pass
-
-
 class UNH(HashInterface[int]):
     """UNH implementation encapsulation.
 
@@ -166,12 +131,3 @@ class UNH(HashInterface[int]):
         return hashUNH(coordinates, num_indices, DEFAULT_MEMORY_SIZE)
 
 
-# Namespace simulation matching C++ namespace hierarchy
-class rl:
-    INT = INT
-    BYTE = BYTE
-
-    class hash:
-        HashInterface = HashInterface
-        UNH = UNH
-        hashUNH = staticmethod(hashUNH)

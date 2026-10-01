@@ -1,13 +1,9 @@
 from typing import TypeVar, Generic, Dict, Optional, Union
 import random
 import copy
+from .StateActionTransitionException import StateActionTransitionException
 
 S = TypeVar('S')
-
-
-class StateActionTransitionException(Exception):
-    """Exception raised for errors in the StateActionTransition."""
-    pass
 
 
 class StateActionTransition(Generic[S]):

@@ -11,29 +11,11 @@ from typing import (
     TypeVar,
     Union,
 )
+from ...utility.CRUDInterface import CRUDInterface
 
 # Type definitions matching declares.h
 FLOAT = float
 SEGMENT_SIZE: int = 100
-
-
-# Base interface from rl.utility.CRUDInterface
-class CRUDInterface(ABC):
-    @abstractmethod
-    def create(self) -> None:
-        pass
-
-    @abstractmethod
-    def read(self) -> None:
-        pass
-
-    @abstractmethod
-    def update(self) -> None:
-        pass
-
-    @abstractmethod
-    def delete2(self) -> None:
-        pass
 
 
 # Database interface and fallback stubs matching rl::db

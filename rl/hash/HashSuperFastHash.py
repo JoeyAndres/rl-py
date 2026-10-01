@@ -16,40 +16,13 @@
 
 from abc import ABC, abstractmethod
 from typing import Generic, Optional, Sequence, TypeVar, Union, overload
+from .HashInterface import HashInterface
 
 # Type aliases representing rl::INT and rl::BYTE
 INT = int
 BYTE = int
 
 RET = TypeVar("RET")
-
-
-class HashInterface(ABC, Generic[RET]):
-    """Interface for all hash encapsulation."""
-
-    @overload
-    @abstractmethod
-    def hash(self, byte_array: Union[bytes, bytearray, Sequence[int]]) -> RET:
-        ...
-
-    @overload
-    @abstractmethod
-    def hash(self, byte_array: Union[bytes, bytearray, Sequence[int]], length: int) -> RET:
-        ...
-
-    @abstractmethod
-    def hash(
-        self,
-        byte_array: Union[bytes, bytearray, Sequence[int]],
-        length: Optional[int] = None,
-    ) -> RET:
-        """Compute the hash of the given byte array.
-
-        :param byte_array: Bytes or sequence of byte values to hash.
-        :param length: Optional number of bytes to hash.
-        :return: Hash value of type RET.
-        """
-        pass
 
 
 def super_fast_hash(
@@ -140,11 +113,4 @@ class SuperFastHash(HashInterface[INT]):
         return super_fast_hash(byte_array, len(byte_array))
 
 
-# Namespace encapsulation mirroring rl::hash
-class rl:
-    class hash:
-        HashInterface = HashInterface
-        SuperFastHash = SuperFastHash
-
-
-__all__ = ["BYTE", "INT", "HashInterface", "SuperFastHash", "super_fast_hash", "rl"]
+__all__ = ["BYTE", "INT", "HashInterface", "SuperFastHash", "super_fast_hash"]
