@@ -1,6 +1,7 @@
 """Auto-generated re-exports. See tools/gen_inits.py."""
 
 from .gradient_descent import *  # noqa: F401,F403
+from .gradient_descent import __all__ as _gradient_descent_all
 from .DynaQ import DynaQ
 from .DynaQBase import DynaQBase
 from .DynaQET import DynaQET
@@ -24,4 +25,4 @@ from .SarsaET import SarsaET
 from .SarsaETFactory import SarsaETFactory
 from .SarsaFactory import SarsaFactory
 
-__all__ = ['DynaQ', 'DynaQBase', 'DynaQET', 'DynaQETFactory', 'DynaQFactory', 'DynaQPlus', 'StateActionPair', 'PriorityQueue', 'DynaQPrioritizedSweeping', 'DynaQPrioritizedSweepingFactory', 'DynaQRLMP', 'EligibilityTraces', 'LearningAlgorithm', 'spLearningAlgorithm', 'LearningAlgorithmFactory', 'QLearning', 'QLearningET', 'QLearningETFactory', 'QLearningFactory', 'ReinforcementLearning', 'spReinforcementLearning', 'ReinforcementLearningFactory', 'Sarsa', 'spSarsa', 'SarsaET', 'SarsaETFactory', 'SarsaFactory']
+__all__ = ['DynaQ', 'DynaQBase', 'DynaQET', 'DynaQETFactory', 'DynaQFactory', 'DynaQPlus', 'StateActionPair', 'PriorityQueue', 'DynaQPrioritizedSweeping', 'DynaQPrioritizedSweepingFactory', 'DynaQRLMP', 'EligibilityTraces', 'LearningAlgorithm', 'spLearningAlgorithm', 'LearningAlgorithmFactory', 'QLearning', 'QLearningET', 'QLearningETFactory', 'QLearningFactory', 'ReinforcementLearning', 'spReinforcementLearning', 'ReinforcementLearningFactory', 'Sarsa', 'spSarsa', 'SarsaET', 'SarsaETFactory', 'SarsaFactory'] + _gradient_descent_all

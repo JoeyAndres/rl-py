@@ -18,51 +18,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
-from typing import Any, Generic, List, TypeVar
-
-from .ReinforcementLearningGDAbstract import ReinforcementLearningGDAbstract
-from .GradientDescentTileCode import GradientDescentTileCode
-from ...coding.TileCode import DEFAULT_TILE_CONT, TileCode
+from ...coding.TileCode import TileCode
+from ...declares import FLOAT
 from ...policy.Policy import Policy
-
-FLOAT = float
-
-spTileCode = TileCode
-spPolicy = Policy
-
-D = TypeVar("D")
-NUM_TILINGS = TypeVar("NUM_TILINGS")
-WEIGHT_CONT = TypeVar("WEIGHT_CONT")
-STATE_DIM = TypeVar("STATE_DIM")
+from .GradientDescentTileCode import GradientDescentTileCode
+from .ReinforcementLearningGDAbstract import ReinforcementLearningGDAbstract
 
 
-class ReinforcementLearningGD(
-    ReinforcementLearningGDAbstract[D, STATE_DIM],
-    Generic[D, NUM_TILINGS, WEIGHT_CONT, STATE_DIM],
-):
-    """
-    Gradient descent implementation of Reinforcement Learning.
-
-    :tparam D: Number of dimension.
-    :tparam NUM_TILINGS: Number of tilings.
-    :tparam WEIGHT_CONT: The container object to store the weights.
-    :tparam STATE_DIM: Number of dimension in State. This defaults to D-1.
-                       This also implies ACTION_DIM = D - STATE_DIM.
-    """
+class ReinforcementLearningGD(ReinforcementLearningGDAbstract):
+    """Reinforcement learning with tile-coded gradient descent."""
 
     def __init__(
         self,
-        tile_code: spTileCode[D, NUM_TILINGS, WEIGHT_CONT],
-        step_size: FLOAT,
-        discount_rate: FLOAT,
+        tileCode: TileCode,
+        stepSize: FLOAT,
+        discountRate: FLOAT,
         lambda_: FLOAT,
-        policy: spPolicy,
+        policy: Policy,
     ) -> None:
-        super().__init__(tile_code, step_size, discount_rate, lambda_, policy)
-        self._gradientDescent = GradientDescentTileCode(
-            tile_code, step_size, discount_rate, lambda_
-        )
-        self._gradient_descent = self._gradientDescent
-
-    def __del__(self) -> None:
-        pass
+        super().__init__(tileCode, stepSize, discountRate, lambda_, policy)
+        self._gradientDescent = GradientDescentTileCode(tileCode, stepSize, discountRate, lambda_)

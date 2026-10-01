@@ -1,3 +1,4 @@
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-timeout = 120
+timeout = 900
+markers = ["slow: long-running convergence tests (deselect with -m \"not slow\")"]

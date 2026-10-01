@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import math
-from typing import List, Tuple
+from typing import Tuple
 
 from rl.agent import Actuator, Environment, Sensor, StateAction
 from rl.utility import FactoryAbstract
@@ -26,17 +26,17 @@ POS = 0
 VEL = 1
 
 
-class MountainCarEnvironment(Environment[List[float], List[float]]):
-    """Classic mountain car. State is [position, velocity]; action is [0|1|2]."""
+class MountainCarEnvironment(Environment[Tuple[float, ...], Tuple[float, ...]]):
+    """Classic mountain car. State is (position, velocity); action is (0|1|2,)."""
 
     def __init__(
-        self, actuator: Actuator[List[float]], sensor: Sensor[List[float]]
+        self, actuator: Actuator[Tuple[float, ...]], sensor: Sensor[Tuple[float, ...]]
     ) -> None:
         super().__init__(actuator, sensor)
 
     def getNextStateAndReward(
-        self, stateAction: StateAction[List[float], List[float]]
-    ) -> Tuple[List[float], float]:
+        self, stateAction: StateAction[Tuple[float, ...], Tuple[float, ...]]
+    ) -> Tuple[Tuple[float, ...], float]:
         act = list(stateAction.getAction())
         nextState = list(stateAction.getState())
 
@@ -57,12 +57,12 @@ class MountainCarEnvironment(Environment[List[float], List[float]]):
             nextState[POS] = -1.2
             nextState[VEL] = 0.0
 
-        return nextState, nextReward
+        return tuple(nextState), nextReward
 
 
-class MountainCarEnvironmentFactory(FactoryAbstract[Environment[List[float], List[float]]]):
+class MountainCarEnvironmentFactory(FactoryAbstract[Environment[Tuple[float, ...], Tuple[float, ...]]]):
     def __init__(
-        self, actuator: Actuator[List[float]], sensor: Sensor[List[float]]
+        self, actuator: Actuator[Tuple[float, ...]], sensor: Sensor[Tuple[float, ...]]
     ) -> None:
         super().__init__()
         self._instance = MountainCarEnvironment(actuator, sensor)

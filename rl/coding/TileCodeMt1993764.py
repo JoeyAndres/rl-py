@@ -1,35 +1,27 @@
-# rl - Reinforcement Learning
-# Copyright (C) 2016  Joey Andres<yeojserdna@gmail.com>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+rl - Reinforcement Learning
+Copyright (C) 2016  Joey Andres<yeojserdna@gmail.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 from __future__ import annotations
 
-from typing import (
-    Any,
-    Generic,
-    List,
-    Optional,
-    Sequence,
-    TypeVar,
-    Union,
-)
+from typing import Any, List, Sequence
 
-from .TileCode import TileCode, DEFAULT_TILE_CONT
-from .DimensionInfo import DimensionInfo
-
-from ..declares import FLOAT, INT, FEATURE_VECTOR, floatArray
+from ..declares import FEATURE_VECTOR, FLOAT
+from .TileCode import TileCode
 
 
 class seed_seq:
@@ -174,114 +166,25 @@ class mt19937_64:
         return x & self.MASK64
 
 
-D = TypeVar("D")
-NUM_TILINGS = TypeVar("NUM_TILINGS")
-try:
-    WEIGHT_CONT = TypeVar("WEIGHT_CONT", default=DEFAULT_TILE_CONT)
-except TypeError:
-    WEIGHT_CONT = TypeVar("WEIGHT_CONT")
+class TileCodeMt1993764(TileCode):
+    """Tile Code using Mt1993764 hash."""
 
-
-class TileCodeMt1993764(
-    TileCode[D, NUM_TILINGS, WEIGHT_CONT],
-    Generic[D, NUM_TILINGS, WEIGHT_CONT],
-):
-    """Tile Code using Mt1993764 hash.
-
-    :tparam D: Number of dimensions.
-    :tparam NUM_TILINGS: Number of tilings.
-    :tparam WEIGHT_CONT: The container object to store the weights.
-    """
-
-    def __init__(
-        self,
-        dimensional_infos: Sequence[DimensionInfo[FLOAT]] | Sequence[Any] | None = None,
-        size_hint: Optional[int] = None,
-        *args: Any,
-        **kwargs: Any,
-    ) -> None:
+    def __init__(self, dimensionalInfos, numTilings, sizeHint=None, weightCont=None) -> None:
         """
-        :param dimensional_infos: Information for each dimension.
-        :param size_hint: If size_hint is greater than calculated size, size_hint
-                          will be used instead. The bigger the size_hint, the
-                          less likely collisions occur during hashing.
+        :param sizeHint: If given, used as the weight vector size. The bigger
+                         the size hint, the less likely collisions occur.
         """
-        if dimensional_infos is None and "dimensionalInfos" in kwargs:
-            dimensional_infos = kwargs.pop("dimensionalInfos")
-        if size_hint is None and "sizeHint" in kwargs:
-            size_hint = kwargs.pop("sizeHint")
+        super().__init__(dimensionalInfos, numTilings, sizeHint, weightCont)
+        self._prng = mt19937_64()
 
-        if size_hint is None:
-            super().__init__(dimensional_infos, *args, **kwargs)
-        else:
-            super().__init__(dimensional_infos, size_hint, *args, **kwargs)
-
-        self._prng: mt19937_64 = mt19937_64()
-
-        if "numTilings" in kwargs:
-            self._numTilings = kwargs["numTilings"]
-        elif "num_tilings" in kwargs:
-            self._numTilings = kwargs["num_tilings"]
-
-    def getFeatureVector(
-        self, parameters: floatArray | Sequence[FLOAT]
-    ) -> FEATURE_VECTOR:
-        dimension = (
-            self.getDimension()
-            if hasattr(self, "getDimension")
-            else len(parameters)
-        )
-        tile_components: List[int] = [0] * (dimension + 1)
-        fv: List[int] = []
-
-        num_tilings = None
-        if hasattr(self, "getNumTilings"):
-            try:
-                num_tilings = self.getNumTilings()
-            except Exception:
-                pass
-        if num_tilings is None:
-            num_tilings = getattr(self, "_numTilings", None)
-        if num_tilings is None:
-            orig = getattr(self, "__orig_class__", None)
-            if orig and hasattr(orig, "__args__") and len(orig.__args__) >= 2:
-                num_tilings = orig.__args__[1]
-        if num_tilings is None:
-            num_tilings = getattr(self, "NUM_TILINGS", 0)
-
-        size_cache = getattr(self, "_sizeCache", None)
-        if size_cache is None and hasattr(self, "getSize"):
-            size_cache = self.getSize()
-
-        for i in range(int(num_tilings)):
-            for j in range(dimension):
-                if hasattr(self, "paramToGridValue"):
-                    tile_components[j] = int(
-                        self.paramToGridValue(parameters[j], i, j)
-                    )
-                elif hasattr(self, "param_to_grid_value"):
-                    tile_components[j] = int(
-                        self.param_to_grid_value(parameters[j], i, j)
-                    )
-
+    def getFeatureVector(self, parameters: Sequence[FLOAT]) -> FEATURE_VECTOR:
+        tileComponents: List[int] = [0] * (self.getDimension() + 1)
+        fv: FEATURE_VECTOR = []
+        for i in range(self.getNumTilings()):
+            for j in range(self.getDimension()):
+                tileComponents[j] = self.paramToGridValue(parameters[j], i, j)
             # Add a unique number_tiling identifier.
-            tile_components[dimension] = i
-
-            seed1 = seed_seq(tile_components)
-            self._prng.seed(seed1)
-
-            if size_cache:
-                fv.append(self._prng() % size_cache)
-            else:
-                fv.append(self._prng())
-
+            tileComponents[self.getDimension()] = i
+            self._prng.seed(seed_seq(tileComponents))
+            fv.append(self._prng() % self._sizeCache)
         return fv
-
-    get_feature_vector = getFeatureVector
-
-
-__all__ = [
-    "TileCodeMt1993764",
-    "seed_seq",
-    "mt19937_64",
-]

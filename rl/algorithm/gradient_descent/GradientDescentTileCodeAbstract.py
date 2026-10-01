@@ -18,77 +18,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import Any, Generic, List, Sequence, TypeVar, Union
-
-FLOAT = float
-UINT = int
-FEATURE_VECTOR = List[UINT]
-
-D = TypeVar("D")
-NUM_TILINGS = TypeVar("NUM_TILINGS")
-WEIGHT_CONT = TypeVar("WEIGHT_CONT")
-STATE_DIM = TypeVar("STATE_DIM")
-
-floatArray = Sequence[FLOAT]
-
-from .GradientDescentAbstract import GradientDescentAbstract
+from typing import Sequence
 
 from ...coding.TileCode import TileCode
+from ...declares import FEATURE_VECTOR, FLOAT
+from .GradientDescentAbstract import GradientDescentAbstract
 
-spTileCode = TileCode
 
-
-class GradientDescentTileCodeAbstract(
-    GradientDescentAbstract[D, STATE_DIM],
-    Generic[D, NUM_TILINGS, WEIGHT_CONT, STATE_DIM],
-):
-    """
-    Abstract class for Gradient Descent utilizing tile codes.
-
-    :param D: Number of dimension.
-    :param NUM_TILINGS: Number of tilings.
-    :param WEIGHT_CONT: The container object to store the weights.
-    :param STATE_DIM: Number of dimension in State.
-                      This also implies ACTION_DIM = D - STATE_DIM.
-    """
-
-    _tileCode: TileCode[D, NUM_TILINGS, WEIGHT_CONT]
+class GradientDescentTileCodeAbstract(GradientDescentAbstract):
+    """Abstract class for Gradient Descent utilizing tile codes."""
 
     def __init__(
         self,
-        tileCode: TileCode[D, NUM_TILINGS, WEIGHT_CONT],
+        tileCode: TileCode,
         stepSize: FLOAT,
         discountRate: FLOAT,
         lambda_: FLOAT,
     ) -> None:
-        """
-        :param tileCode: Type of course coding.
-        :param stepSize: Step size for gradient descent.
-        :param discountRate: Discount rate for gradient descent.
-        :param lambda_: How influential is current state-action to other state-action.
-        """
         super().__init__(tileCode, stepSize, discountRate, lambda_)
-        # This is equivalent to _tileCode = _courseCode (downcast'd).
-        self._tileCode = tileCode
+        # Same object as _courseCode, typed as TileCode for tile code methods.
+        self._tileCode: TileCode = tileCode
 
     def getValueFromFeatureVector(self, fv: FEATURE_VECTOR) -> FLOAT:
-        """
-        Get the value of the parameters in the real space.
-
-        :param fv: Feature vector.
-        :return: Corresponding value.
-        """
         return self._tileCode.getValueFromFeatureVector(fv)
 
     def getFeatureVector(self, parameters: Sequence[FLOAT]) -> FEATURE_VECTOR:
-        """
-        :param parameters: Parameters in the n-dimension space.
-        :return: Feature vector output. Feature vector are samples taken around
-                 the parameters in the n-dimension tilecode.
-        """
         return self._tileCode.getFeatureVector(parameters)
-
-    # Aliases for pythonic naming conventions
-    get_value_from_feature_vector = getValueFromFeatureVector
-    get_feature_vector = getFeatureVector

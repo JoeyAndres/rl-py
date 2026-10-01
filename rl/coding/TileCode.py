@@ -1,222 +1,142 @@
+"""
+rl - Reinforcement Learning
+Copyright (C) 2016  Joey Andres<yeojserdna@gmail.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
 from __future__ import annotations
 
 import random
-from abc import ABC, abstractmethod
-from typing import (
-    Any,
-    Generic,
-    List,
-    MutableSequence,
-    Optional,
-    Sequence,
-    TypeVar,
-)
+from abc import abstractmethod
+from typing import Generic, List, MutableSequence, Optional, Sequence, TypeVar
 
-# Type declarations corresponding to rl/declares.h
-FLOAT = float
-UINT = int
-FEATURE_VECTOR = List[int]
-DEFAULT_TILE_CONT = List[float]
+from ..declares import FEATURE_VECTOR, FLOAT
+from ..utility.IndexAccessorInterface import IndexAccessorInterface
+from .CourseCode import CourseCode
+from .DimensionInfo import DimensionInfo
 
-CONT = TypeVar("CONT", bound=MutableSequence[Any])
-D = TypeVar("D")
-NUM_TILINGS_TYPE = TypeVar("NUM_TILINGS_TYPE")
+#: Default container for tile code weights (C++: std::vector<FLOAT>).
+DEFAULT_TILE_CONT = list
+
 WEIGHT_CONT = TypeVar("WEIGHT_CONT", bound=MutableSequence[float])
 
 
-# Base interface corresponding to rl::utility::IndexAccessorInterface
-from ..utility.IndexAccessorInterface import IndexAccessorInterface
+class TileCode(CourseCode, IndexAccessorInterface[WEIGHT_CONT], Generic[WEIGHT_CONT]):
+    """Base object encapsulate tile coding.
 
+    The C++ template parameters map as follows:
 
-# Base class corresponding to rl::coding::CourseCode
-from .CourseCode import CourseCode
-
-
-# Class corresponding to rl::coding::DimensionInfo
-from .DimensionInfo import DimensionInfo
-
-
-class TileCode(
-    CourseCode[D],
-    IndexAccessorInterface[WEIGHT_CONT],
-    Generic[D, NUM_TILINGS_TYPE, WEIGHT_CONT],
-):
+    * D (number of dimensions) is len(dimensionalInfos).
+    * NUM_TILINGS is the numTilings constructor argument.
+    * WEIGHT_CONT is the weightCont constructor argument: a callable
+      (size, initialValue) -> MutableSequence[float].
     """
-    Base object encapsulate tile coding.
-
-    For an in-depth explanation of Tile Coding, see Tile Coding documentation.
-    """
-
-    NUM_TILINGS: int = 1
 
     def __init__(
         self,
-        dimensionalInfos: Sequence[DimensionInfo],
+        dimensionalInfos: Sequence[DimensionInfo[FLOAT]],
+        numTilings: int,
         sizeHint: Optional[int] = None,
-        numTilings: Optional[int] = None,
-        **kwargs: Any,
+        weightCont=None,
     ) -> None:
         """
-        :param dimensionalInfos: Sequence of DimensionInfo instances.
-        :param sizeHint: Size of weight container (optional).
-        :param numTilings: Number of tilings (optional).
+        :param dimensionalInfos: Information for each dimension.
+        :param numTilings: Number of tilings.
+        :param sizeHint: Size of the weight vector. Defaults to the number of
+                         distinct grid points across all tilings.
+        :param weightCont: Factory for the weight container. Defaults to list.
         """
-        if numTilings is not None:
-            self._num_tilings: int = numTilings
-        elif "num_tilings" in kwargs:
-            self._num_tilings = kwargs["num_tilings"]
-        elif hasattr(self, "NUM_TILINGS") and self.NUM_TILINGS:
-            self._num_tilings = self.NUM_TILINGS
-        else:
-            self._num_tilings = 1
-
         super().__init__(len(dimensionalInfos))
-        self._dimensionalInfos: List[DimensionInfo] = list(dimensionalInfos)
-        self._pseudoRNG = random.Random()
-
-        if sizeHint is None:
-            self._sizeCache: int = self._calculateSize(
-                self._dimensionalInfos, self._num_tilings
-            )
+        self._dimensionalInfos: List[DimensionInfo[FLOAT]] = list(dimensionalInfos)
+        self._numTilings: int = numTilings
+        self._sizeCache: int = (
+            sizeHint
+            if sizeHint is not None
+            else self._calculateSize(self._dimensionalInfos, numTilings)
+        )
+        if weightCont is None:
+            self._w: WEIGHT_CONT = [0.0] * self._sizeCache  # type: ignore[assignment]
         else:
-            self._sizeCache = sizeHint
+            self._w = weightCont(self._sizeCache, 0.0)
 
-        self._w: List[float] = [0.0] * self._sizeCache
-
-        # Calculate random offsets.
-        self._randomOffsets: List[List[float]] = []
-        for i in range(self._num_tilings):
-            offsets: List[float] = []
-            for j in range(self.getDimension()):
-                offsets.append(
-                    self._pseudoRNG.uniform(0.0, 1.0)
-                    * self._dimensionalInfos[j].GetOffsets()
-                    * self._dimensionalInfos[j].getGeneralizationScale()
-                )
-            self._randomOffsets.append(offsets)
+        # Pre-computing the random offsets keeps samples consistent; recomputing
+        # them every call would need many more tilings to generalize as well.
+        self._pseudoRNG = random.Random()
+        self._randomOffsets: List[List[FLOAT]] = [
+            [
+                self._pseudoRNG.uniform(0.0, 1.0)
+                * di.GetOffsets()
+                * di.getGeneralizationScale()
+                for di in self._dimensionalInfos
+            ]
+            for _ in range(numTilings)
+        ]
 
     def at(self, i: int) -> float:
         return self._w[i]
-
-    def __getitem__(self, i: int) -> float:
-        return self.at(i)
 
     def __setitem__(self, i: int, value: float) -> None:
         self._w[i] = value
 
     @abstractmethod
-    def getFeatureVector(
-        self, parameters: Sequence[float]
-    ) -> FEATURE_VECTOR:
-        """
-        Hashed the parameter in Real space to a Natural space [0, infinity).
-        :param parameters:
-        :return: Vector of "discretize" index.
-        """
-        pass
+    def getFeatureVector(self, parameters: Sequence[FLOAT]) -> FEATURE_VECTOR:
+        """Hash the parameters in real space to natural space [0, size).
 
-    def getValueFromFeatureVector(self, fv: Sequence[int]) -> float:
+        :param parameters: Point in real space, one value per dimension.
+        :return: Feature vector, one index per tiling.
         """
-        Get the value of the parameters in the real space.
-        :param fv: corresponding feature vector.
-        :return: corresponding value.
+
+    def getValueFromFeatureVector(self, fv: FEATURE_VECTOR) -> FLOAT:
         """
-        total: float = 0.0
-        for f in fv:
-            total += self._w[f]
-        return total
+        :param fv: Feature vector.
+        :return: Sum of the weights indexed by the feature vector.
+        """
+        return sum(self._w[f] for f in fv)
 
     def getSize(self) -> int:
         return self._sizeCache
 
     def getNumTilings(self) -> int:
-        """
-        :return: number of tilings.
-        """
-        return self._num_tilings
+        return self._numTilings
 
-    def getValueFromParameters(self, parameters: Sequence[float]) -> float:
-        fv = self.getFeatureVector(parameters)
-        return self.getValueFromFeatureVector(fv)
+    def getValueFromParameters(self, parameters: Sequence[FLOAT]) -> FLOAT:
+        return self.getValueFromFeatureVector(self.getFeatureVector(parameters))
 
     def paramToGridValue(
-        self, param: float, tilingIndex: int, dimensionIndex: int
+        self, param: FLOAT, tilingIndex: int, dimensionIndex: int
     ) -> int:
-        """
-        :param param:
-        :param tilingIndex:
-        :param dimensionIndex:
-        :return:
-        """
+        di = self._dimensionalInfos[dimensionIndex]
         randomOffset = self._randomOffsets[tilingIndex][dimensionIndex]
-        dimGeneralizationScale = (
-            self._dimensionalInfos[dimensionIndex].getGeneralizationScale()
-        )
-        dimLowerBound = self._dimensionalInfos[dimensionIndex].getLowerBound()
-        dimGridCountIdeal = (
-            self._dimensionalInfos[dimensionIndex].GetGridCountIdeal()
-        )
-        dimRangeMagnitude = (
-            self._dimensionalInfos[dimensionIndex].GetRangeDifference()
-        )
-
+        # C++ returns size_t, so truncate toward zero.
         return int(
-            (
-                (
-                    param
-                    + randomOffset * dimGeneralizationScale
-                    - dimLowerBound
-                )
-                * dimGridCountIdeal
-            )
-            / dimRangeMagnitude
+            (param + randomOffset * di.getGeneralizationScale() - di.getLowerBound())
+            * di.GetGridCountIdeal()
+            / di.GetRangeDifference()
         )
 
     def _calculateSizeCache(self) -> int:
-        """
-        :return: Number of possible grid points.
-        """
-        return self._calculateSize(self._dimensionalInfos, self._num_tilings)
+        return self._calculateSize(self._dimensionalInfos, self._numTilings)
 
-    @classmethod
+    @staticmethod
     def _calculateSize(
-        cls,
-        dims: Sequence[DimensionInfo],
-        numTilings: Optional[int] = None,
+        dims: Sequence[DimensionInfo[FLOAT]], numTilings: int
     ) -> int:
-        if numTilings is None:
-            numTilings = getattr(cls, "NUM_TILINGS", 1)
         size = 1
         for di in dims:
             size *= di.GetGridCountReal()
-        size *= numTilings
-        return size
-
-    @classmethod
-    def __class_getitem__(cls, params: Any) -> Any:
-        try:
-            if not isinstance(params, tuple):
-                params = (params,)
-            if len(params) == 1:
-                params = (Any, Any, params[0])
-            elif len(params) == 2:
-                params = (params[0], params[1], DEFAULT_TILE_CONT)
-            return super().__class_getitem__(params)
-        except Exception:
-            return cls
-
-    def __len__(self) -> int:
-        return self.getSize()
-
-    # Pythonic snake_case aliases
-    get_feature_vector = getFeatureVector
-    get_value_from_feature_vector = getValueFromFeatureVector
-    get_size = getSize
-    get_num_tilings = getNumTilings
-    get_value_from_parameters = getValueFromParameters
-    param_to_grid_value = paramToGridValue
-    _calculate_size_cache = _calculateSizeCache
-    _calculate_size = _calculateSize
+        return size * numTilings
 
 
 spTileCode = TileCode

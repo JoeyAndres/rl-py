@@ -44,6 +44,7 @@ for d, subdirs, files in os.walk(ROOT):
     for s in subs:
         if rel == ".": continue
         lines.append(f"from .{s} import *  # noqa: F401,F403")
+        lines.append(f"from .{s} import __all__ as _{s}_all")
     for m in mods:
         names = [n for n in public_names(os.path.join(d, m + ".py"), m) if n not in exported]
         # Class named after module goes first; skip helper TypeVar-ish single letters
@@ -54,8 +55,9 @@ for d, subdirs, files in os.walk(ROOT):
     if rel == ".":
         lines.append("from .declares import *  # noqa: F401,F403")
         lines.append("from . import agent, algorithm, coding, db, hash, policy, utility  # noqa: F401")
-    elif exported:
+    elif exported or subs:
         lines.append("")
-        lines.append("__all__ = [" + ", ".join(repr(n) for n in exported) + "]")
+        lines.append("__all__ = [" + ", ".join(repr(n) for n in exported) + "]"
+                     + "".join(f" + _{s}_all" for s in subs))
     open(os.path.join(d, "__init__.py"), "w").write("\n".join(lines) + "\n")
     print(rel, len(exported))

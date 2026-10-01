@@ -16,18 +16,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from typing import List
+from typing import Tuple
 
 from rl.agent import Sensor
 
 from .MountainCarEnvironment import POS
 
 
-class SensorMountainCar(Sensor[List[float]]):
+class SensorMountainCar(Sensor[Tuple[float, ...]]):
     def __init__(self) -> None:
-        super().__init__([0.0, 0.0])
+        super().__init__((0.0, 0.0))
 
-    def isTerminalState(self, stateData: List[float]) -> bool:
+    def isTerminalState(self, stateData: Tuple[float, ...]) -> bool:
         return abs(stateData[POS] - 0.50) <= 0.01
 
 
